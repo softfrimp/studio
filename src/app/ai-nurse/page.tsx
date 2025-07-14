@@ -114,7 +114,7 @@ export default function AiNursePage() {
                         }}
                     >
                         <Button asChild size="lg" className="h-14 text-xl">
-                            <Link href="https://share.imagica.ai?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8" target="_blank" rel="noopener noreferrer">
+                            <Link href="https://share.imagica.ai/?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8" target="_blank" rel="noopener noreferrer">
                                 <Sparkles className="mr-3 h-6 w-6" />
                                 Launch AI Nurse
                             </Link>
