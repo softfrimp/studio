@@ -18,3 +18,17 @@ export interface PieChartDataPoint {
   value: number; // duration in days
   fill: string; // HSL variable for chart color
 }
+
+// Auth Types
+export interface SignUpData {
+  email: string;
+  password?: string;
+  lastPeriodDate: string; // ISO string
+  cycleLength: number;
+  periodDuration: number;
+}
+
+export interface LoginData {
+    email: string;
+    password?: string;
+}

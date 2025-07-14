@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format, parseISO } from 'date-fns';
+import { useRouter } from 'next/navigation';
 
 import { Header } from '@/components/cyclewise/Header';
 import { InitialPeriodInputForm } from '@/components/cyclewise/InitialPeriodInputForm';
@@ -15,12 +16,15 @@ import { AiVoiceAssistantUI } from '@/components/cyclewise/AiVoiceAssistantUI';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
+
 
 import { predictCycle } from '@/ai/flows/predict-cycle';
 import { personalizeCyclePredictions } from '@/ai/flows/personalize-cycle-predictions';
 import { aiVoiceAssistant } from '@/ai/flows/ai-voice-assistant';
 
 import type { CyclePrediction, PersonalizedCyclePrediction, AiVoiceAssistantOutput } from '@/lib/types';
+import { Button } from '@/components/ui/button';
 
 export default function CycleWisePage() {
   const [initialPeriodDate, setInitialPeriodDate] = useState<Date | null>(null);
@@ -35,6 +39,16 @@ export default function CycleWisePage() {
   });
 
   const { toast } = useToast();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    // If not loading and no user, redirect to login
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
 
   const handleInitialPeriodSubmit = async (date: Date, length: number) => {
     setIsLoading(prev => ({ ...prev, basic: true }));
@@ -109,6 +123,10 @@ export default function CycleWisePage() {
   
   const noPredictionsAvailable = !basicPrediction && !personalizedPrediction && !(aiVoiceResponse?.cycleVisualization);
 
+  if (loading || !user) {
+    return <div className="flex h-screen w-full items-center justify-center">Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
@@ -141,7 +159,7 @@ export default function CycleWisePage() {
                             This will help CycleWise predict your upcoming cycle phases. You can then log symptoms 
                             and use the AI assistant for more personalized insights.
                         </p>
-                         <img src="https://placehold.co/600x300.png?text=Track+Your+Cycle" alt="Placeholder for cycle tracking" data-ai-hint="wellness calendar" className="mt-4 rounded-md w-full h-auto object-cover"/>
+                         <img src="https://placehold.co/600x300.png" alt="Placeholder for cycle tracking" data-ai-hint="wellness calendar" className="mt-4 rounded-md w-full h-auto object-cover"/>
                     </CardContent>
                 </Card>
             ) : (
