@@ -3,9 +3,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Link2 } from 'lucide-react';
 
 import {
   SidebarProvider,
@@ -17,16 +17,31 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function AiNursePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [url, setUrl] = useState('https://share.imagica.ai/?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8');
+  const [inputValue, setInputValue] = useState(url);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
+
+  const handleSetUrl = (e: React.FormEvent) => {
+    e.preventDefault();
+    // A simple validation to ensure it's a URL-like string
+    if (inputValue.startsWith('http://') || inputValue.startsWith('https://')) {
+        setUrl(inputValue);
+    } else {
+        alert('Please enter a valid URL starting with http:// or https://');
+    }
+  };
 
   if (loading || !user) {
     return (
@@ -86,13 +101,35 @@ export default function AiNursePage() {
             </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <div className="h-screen w-full">
-            <iframe
-                src="https://share.imagica.ai/?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8"
-                className="w-full h-full border-0"
-                title="AI Nurse"
-                allow="camera; microphone"
-            ></iframe>
+          <div className="flex h-screen w-full flex-col">
+            <Card className="m-4">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Link2 className="h-5 w-5"/>
+                        Set AI Nurse Website
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSetUrl} className="flex items-center gap-2">
+                        <Input
+                            type="url"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            placeholder="https://example.com"
+                        />
+                        <Button type="submit">Set Link</Button>
+                    </form>
+                </CardContent>
+            </Card>
+            <div className="flex-grow p-4 pt-0">
+                <iframe
+                    key={url}
+                    src={url}
+                    className="w-full h-full border rounded-md"
+                    title="AI Nurse"
+                    allow="camera; microphone"
+                ></iframe>
+            </div>
           </div>
         </SidebarInset>
       </div>
