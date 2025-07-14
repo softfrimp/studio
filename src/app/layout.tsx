@@ -7,6 +7,9 @@ import { AuthProvider } from '@/context/AuthContext';
 import './globals.css';
 import { useState, useEffect } from 'react';
 import { SplashScreen } from '@/components/cyclewise/SplashScreen';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
+
 
 // Note: Metadata export is not effective in a 'use client' component.
 // For page-specific metadata, define it in page.tsx files.
@@ -31,15 +34,12 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
         <title>CycleWise</title>
         <meta name="description" content="Track your cycle with wisdom and care." />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
+      <body className="font-sans antialiased">
         <AuthProvider>
           {showSplash ? <SplashScreen /> : children}
           <Toaster />

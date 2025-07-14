@@ -57,12 +57,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md shadow-2xl">
-        <CardHeader className="text-center">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4 bg-hero-pattern">
+      <Card className="w-full max-w-md shadow-2xl glass">
+        <CardHeader className="text-center bg-gradient-to-b from-primary/10 to-transparent p-6 rounded-t-lg">
             <div className="flex items-center justify-center gap-2 mb-4">
-                <Droplets className="h-8 w-8 text-primary-foreground" />
-                <h1 className="text-3xl font-headline font-bold text-primary-foreground">
+                <Droplets className="h-8 w-8 text-primary" />
+                <h1 className="text-3xl font-headline font-bold text-primary">
                     CycleWise
                 </h1>
             </div>
@@ -106,7 +106,7 @@ export default function LoginPage() {
           </Form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="font-semibold text-primary-foreground hover:underline">
+            <Link href="/signup" className="font-semibold text-primary hover:underline">
               Sign up
             </Link>
           </p>
