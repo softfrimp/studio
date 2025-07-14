@@ -28,14 +28,29 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name, value }: any) => {
     const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    // Increase the radius to move the label outside the pie
+    const radius = outerRadius + 25; 
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const sin = Math.sin(-RADIAN * midAngle);
+    const cos = Math.cos(-RADIAN * midAngle);
+    const sx = cx + (outerRadius + 10) * cos;
+    const sy = cy + (outerRadius + 10) * sin;
+    const mx = cx + (outerRadius + 20) * cos;
+    const my = cy + (outerRadius + 20) * sin;
+    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+    const ey = my;
+    const textAnchor = cos >= 0 ? 'start' : 'end';
+
 
     return (
-        <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-xs font-bold fill-primary-foreground">
-            {`${name.replace(' (Follicular)','').replace(' (Luteal)','')} (${value}d)`}
+      <g>
+        <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke="hsl(var(--foreground))" fill="none" />
+        <circle cx={ex} cy={ey} r={2} fill="hsl(var(--foreground))" stroke="none" />
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="hsl(var(--foreground))" className="text-xs font-semibold">
+           {`${name.replace(' (Follicular)','').replace(' (Luteal)','')} (${value}d)`}
         </text>
+      </g>
     );
 };
 
@@ -51,7 +66,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     
     const phaseOrder: PhaseName[] = ['menstruation', 'possibleToConceive1', 'ovulation', 'possibleToConceive2', 'unlikelyToConceive'];
 
-    phaseOrder.forEach((phaseName, index) => {
+    phaseOrder.forEach((phaseName) => {
         const phase = prediction.phases[phaseName];
         if (phase) {
             const phaseInfo = getPhaseInfo(phaseName);
@@ -59,8 +74,8 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
             if (days > 0) {
               // Use a unique name for each distinct phase to prevent grouping
               let uniqueName = phaseInfo.name;
-              if (phaseName === 'possibleToConceive1') uniqueName = `Fertile Window (Follicular)`;
-              if (phaseName === 'possibleToConceive2') uniqueName = `Fertile Window (Luteal)`;
+              if (phaseName === 'possibleToConceive1') uniqueName = `Fertile (Follicular)`;
+              if (phaseName === 'possibleToConceive2') uniqueName = `Fertile (Luteal)`;
 
               data.push({
                   name: uniqueName,
@@ -101,14 +116,14 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
       </CardHeader>
       <CardContent className="h-[350px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
+          <PieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
             <Pie
               data={pieData}
               cx="50%"
               cy="50%"
               labelLine={false}
-              outerRadius={100}
-              innerRadius={50}
+              outerRadius={80}
+              innerRadius={40}
               fill="#8884d8"
               dataKey="value"
               label={renderCustomizedLabel}
