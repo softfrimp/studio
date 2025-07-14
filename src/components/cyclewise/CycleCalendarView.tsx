@@ -14,9 +14,8 @@ type CycleCalendarViewProps = {
 
 const phaseInfo = {
   menstruation: { name: 'Menstruation', color: 'bg-red-400/30 text-red-900 border-red-400/50' },
-  follicular: { name: 'Follicular', color: 'bg-pink-400/30 text-pink-900 border-pink-400/50' },
-  ovulation: { name: 'Ovulation', color: 'bg-green-400/30 text-green-900 border-green-400/50' },
-  luteal: { name: 'Luteal', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50' },
+  fertile: { name: 'Fertile Window', color: 'bg-green-400/30 text-green-900 border-green-400/50' },
+  luteal: { name: 'Luteal Phase', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50' },
 };
 
 
@@ -39,16 +38,10 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
         color: phaseInfo.menstruation.color 
       });
       activePhases.push({ 
-        name: phaseInfo.follicular.name, 
-        startDate: parseISO(prediction.follicular.start), 
-        endDate: parseISO(prediction.follicular.end), 
-        color: phaseInfo.follicular.color 
-      });
-      activePhases.push({ 
-        name: phaseInfo.ovulation.name, 
-        startDate: parseISO(prediction.ovulation.start), 
-        endDate: parseISO(prediction.ovulation.end), 
-        color: phaseInfo.ovulation.color 
+        name: phaseInfo.fertile.name, 
+        startDate: parseISO(prediction.fertile.start), 
+        endDate: parseISO(prediction.fertile.end), 
+        color: phaseInfo.fertile.color 
       });
       activePhases.push({ 
         name: phaseInfo.luteal.name, 
@@ -110,8 +103,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
   
   const legendItems = [
     phaseInfo.menstruation,
-    phaseInfo.follicular,
-    phaseInfo.ovulation,
+    phaseInfo.fertile,
     phaseInfo.luteal
   ];
 

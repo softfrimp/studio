@@ -1,8 +1,7 @@
 export interface CyclePrediction {
   // Dates are in 'yyyy-MM-dd' format
   menstruation: { start: string; end: string };
-  follicular: { start: string; end: string };
-  ovulation: { start: string; end: string }; // This is the most fertile window
+  fertile: { start: string; end: string }; // Fertile window
   luteal: { start: string; end: string };
   nextMenstruationDate: string;
 }

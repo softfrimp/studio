@@ -69,7 +69,6 @@ export default function CycleWisePage() {
     if(user) updateInitialPeriod(date, length);
     
     try {
-      // Use the manual calculation function
       const predictionData = calculateCyclePhases({
         startDate: format(date, 'yyyy-MM-dd'),
         cycleLength: length
@@ -82,7 +81,6 @@ export default function CycleWisePage() {
       toast({ title: 'Prediction Error', description: 'Failed to predict cycle.', variant: 'destructive' });
     } finally {
        if (!fromEffect) {
-         // Add a small delay to make the loading feel more substantial
          setTimeout(() => setIsLoading(false), 500);
        }
     }

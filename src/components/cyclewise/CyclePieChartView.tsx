@@ -7,11 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import type { CyclePrediction, PieChartDataPoint } from '@/lib/types';
 
 const COLORS = {
-  menstruation: 'hsl(var(--chart-1))', // Red
-  follicular: 'hsl(var(--chart-2))',   // Pink/Orange
-  ovulation: 'hsl(var(--chart-3))',    // Green
-  luteal: 'hsl(var(--chart-4))',       // Blue/Purple
-  other: 'hsl(var(--chart-5))',        // Muted
+  menstruation: 'hsl(var(--chart-1))', 
+  fertile: 'hsl(var(--chart-3))',    
+  luteal: 'hsl(var(--chart-4))',       
+  other: 'hsl(var(--chart-5))',        
 };
 
 
@@ -27,14 +26,12 @@ export function CyclePieChartView({ prediction }: CyclePieChartViewProps) {
     const getDays = (start: string, end: string) => differenceInDays(parseISO(end), parseISO(start)) + 1;
 
     data.push({ name: 'Menstruation', value: getDays(prediction.menstruation.start, prediction.menstruation.end), fill: COLORS.menstruation });
-    data.push({ name: 'Follicular', value: getDays(prediction.follicular.start, prediction.follicular.end), fill: COLORS.follicular });
-    data.push({ name: 'Ovulation', value: getDays(prediction.ovulation.start, prediction.ovulation.end), fill: COLORS.ovulation });
-    data.push({ name: 'Luteal', value: getDays(prediction.luteal.start, prediction.luteal.end), fill: COLORS.luteal });
+    data.push({ name: 'Fertile Window', value: getDays(prediction.fertile.start, prediction.fertile.end), fill: COLORS.fertile });
+    data.push({ name: 'Luteal Phase', value: getDays(prediction.luteal.start, prediction.luteal.end), fill: COLORS.luteal });
 
     const accountedDays = data.reduce((sum, p) => sum + p.value, 0);
     const cycleLength = accountedDays > 0 ? accountedDays : 28;
 
-    // Optional: Adjust if there's a discrepancy, though the new calculation should be fairly accurate
     if (accountedDays < cycleLength) {
         data.push({ name: 'Other', value: cycleLength - accountedDays, fill: COLORS.other });
     }
@@ -74,7 +71,7 @@ export function CyclePieChartView({ prediction }: CyclePieChartViewProps) {
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"
-              label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+              label={({ name, value }) => `${name} (${value} days)`}
             >
               {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
