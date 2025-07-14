@@ -52,10 +52,10 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
 
   phases.forEach((phase) => {
     // Each modifier key must be unique. Using the description is a safe bet.
-    const key = phase.description.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const key = phase.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
     modifiers[key] = { from: phase.startDate, to: phase.endDate };
     // This applies the background color directly.
-    modifiersClassNames[key] = phase.color;
+    modifiersClassNames[key] = `${phase.color} text-foreground/90 rounded-md`;
   });
 
   if (phases.length === 0) {
@@ -74,7 +74,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
             className="p-0 mt-4 rounded-md border"
             classNames={{
               day_selected: 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
-              day_today: 'bg-accent text-accent-foreground rounded-md',
+              day_today: 'bg-accent text-accent-foreground rounded-full',
             }}
           />
         </CardContent>
@@ -86,9 +86,12 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
     getPhaseInfo('menstruation'),
     getPhaseInfo('possibleToConceive1'),
     getPhaseInfo('ovulation'),
-    getPhaseInfo('possibleToConceive2'),
     getPhaseInfo('unlikelyToConceive'),
   ];
+  // Filter out duplicates for legend
+  const uniqueLegendItems = legendItems.filter((item, index, self) =>
+    index === self.findIndex((t) => t.name === item.name)
+  );
 
   return (
     <Card className="shadow-lg">
@@ -97,8 +100,8 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
       </CardHeader>
       <CardContent>
         <div className="mb-4 flex flex-wrap gap-2">
-          {legendItems.map((item) => (
-            <Badge key={item.description} variant="outline" className={`px-2 py-1 ${item.color}`}>
+          {uniqueLegendItems.map((item) => (
+            <Badge key={item.name} variant="outline" className={`px-2 py-1 ${item.color} border-foreground/20 text-foreground`}>
               {item.name}
             </Badge>
           ))}
