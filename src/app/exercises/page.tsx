@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -74,6 +74,14 @@ export default function ExercisesPage() {
                           <Link href="/exercises">
                               <HeartPulse />
                               Exercises
+                          </Link>
+                      </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                          <Link href="/ai-nurse">
+                              <Stethoscope />
+                              AI Nurse
                           </Link>
                       </SidebarMenuButton>
                   </SidebarMenuItem>
