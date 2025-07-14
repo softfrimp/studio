@@ -81,3 +81,4 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
     nextMenstruationDate: formatDate(nextMenstruationDate),
   };
 }
+

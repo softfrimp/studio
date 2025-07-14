@@ -18,14 +18,17 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     if (!prediction) return;
     
     const data: PieChartDataPoint[] = [];
+    let totalDays = 0;
 
     (Object.keys(prediction.phases) as PhaseName[]).forEach(phaseName => {
         const phase = prediction.phases[phaseName];
         if (phase) {
             const phaseInfo = getPhaseInfo(phaseName);
+            const days = getDays(phase.start, phase.end);
+            totalDays += days;
             data.push({
                 name: phaseInfo.name,
-                value: getDays(phase.start, phase.end),
+                value: days,
                 fill: `hsl(var(${phaseInfo.chartColor}))`
             });
         }
@@ -34,32 +37,15 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     const cycleLength = prediction.cycleLength;
     setTotalCycleLength(cycleLength);
     
-    // Combine the two "Possible to Conceive" phases for a cleaner chart
-    const combinedData: PieChartDataPoint[] = [];
-    const possibleToConceivePhases = data.filter(d => d.name.includes('Possible to Conceive'));
-
-    if (possibleToConceivePhases.length > 0) {
-        const totalValue = possibleToConceivePhases.reduce((acc, p) => acc + p.value, 0);
-        combinedData.push({
-            name: 'Possible to Conceive',
-            value: totalValue,
-            fill: possibleToConceivePhases[0].fill
-        });
-    }
-
-    // Add other phases
-    data.forEach(d => {
-        if (!d.name.includes('Possible to Conceive')) {
-            combinedData.push(d);
-        }
-    });
-    
     // Sort for consistent order
     const phaseOrder = ['Menstruation', 'Possible to Conceive', 'Ovulation', 'Unlikely to Conceive'];
-    combinedData.sort((a, b) => phaseOrder.indexOf(a.name) - phaseOrder.indexOf(b.name));
+    data.sort((a, b) => {
+      const aIndex = phaseOrder.findIndex(p => a.name.startsWith(p));
+      const bIndex = phaseOrder.findIndex(p => b.name.startsWith(p));
+      return aIndex - bIndex;
+    });
 
-
-    setPieData(combinedData.filter(d => d.value > 0));
+    setPieData(data.filter(d => d.value > 0));
 
   }, [prediction]);
 
