@@ -27,9 +27,9 @@ interface PhaseInfo {
 // Storing UI-related info here to keep it coupled with the logic
 const PHASE_INFO_MAP: Record<PhaseName, PhaseInfo> = {
     menstruation: { name: 'Menstruation', description: 'Menstruation', color: 'bg-red-400/50', textColor: 'text-red-900', chartColor: '--chart-1', pregnancyChance: 1, shortName: 'Menstruation' },
-    possibleToConceive1: { name: 'Fertile Window', description: 'Likely to Conceive (Follicular)', color: 'bg-red-600/50', textColor: 'text-red-100', chartColor: '--chart-2', pregnancyChance: 15, shortName: 'Fertile' },
+    possibleToConceive1: { name: 'Fertile Window', description: 'Likely to Conceive (Follicular)', color: 'bg-primary/50', textColor: 'text-primary-foreground', chartColor: '--chart-2', pregnancyChance: 15, shortName: 'Fertile' },
     ovulation: { name: 'Ovulation', description: 'Ovulation (Most Fertile)', color: 'bg-green-400/50', textColor: 'text-green-900', chartColor: '--chart-3', pregnancyChance: 90, shortName: 'Ovulation' },
-    possibleToConceive2: { name: 'Fertile Window', description: 'Likely to Conceive (Luteal)', color: 'bg-red-600/50', textColor: 'text-red-100', chartColor: '--chart-2', pregnancyChance: 15, shortName: 'Fertile' },
+    possibleToConceive2: { name: 'Fertile Window', description: 'Likely to Conceive (Luteal)', color: 'bg-primary/50', textColor: 'text-primary-foreground', chartColor: '--chart-2', pregnancyChance: 15, shortName: 'Fertile' },
     unlikelyToConceive: { name: 'Luteal Phase', description: 'Unlikely to Conceive', color: 'bg-blue-300/50', textColor: 'text-blue-900', chartColor: '--chart-4', pregnancyChance: 1, shortName: 'Luteal' }
 };
 
