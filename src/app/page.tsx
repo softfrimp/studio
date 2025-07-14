@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,6 +10,7 @@ import { Header } from '@/components/cyclewise/Header';
 import { InitialPeriodInputForm } from '@/components/cyclewise/InitialPeriodInputForm';
 import { CycleCalendarView } from '@/components/cyclewise/CycleCalendarView';
 import { CyclePieChartView } from '@/components/cyclewise/CyclePieChartView';
+import { PregnancyChanceBarChart } from '@/components/cyclewise/PregnancyChanceBarChart';
 import { InspirationalQuotesDisplay } from '@/components/cyclewise/InspirationalQuotesDisplay';
 import { FunFactsDisplay } from '@/components/cyclewise/FunFactsDisplay';
 
@@ -159,20 +161,26 @@ export default function CycleWisePage() {
                         </Card>
                     ) : (
                     <Tabs defaultValue="calendar" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 bg-primary/20">
-                        <TabsTrigger value="calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendar View</TabsTrigger>
-                        <TabsTrigger value="piechart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Pie Chart View</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-3 bg-primary/20">
+                          <TabsTrigger value="calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendar</TabsTrigger>
+                          <TabsTrigger value="piechart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Pie Chart</TabsTrigger>
+                          <TabsTrigger value="barchart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Bar Chart</TabsTrigger>
                         </TabsList>
                         <TabsContent value="calendar">
-                        <CycleCalendarView 
-                            prediction={prediction} 
-                            initialDate={initialPeriodDate}
-                        />
+                          <CycleCalendarView 
+                              prediction={prediction} 
+                              initialDate={initialPeriodDate}
+                          />
                         </TabsContent>
                         <TabsContent value="piechart">
-                        <CyclePieChartView 
-                           prediction={prediction}
-                        />
+                          <CyclePieChartView 
+                            prediction={prediction}
+                          />
+                        </TabsContent>
+                         <TabsContent value="barchart">
+                          <PregnancyChanceBarChart 
+                            prediction={prediction}
+                          />
                         </TabsContent>
                     </Tabs>
                     )}

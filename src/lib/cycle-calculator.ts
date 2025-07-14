@@ -1,4 +1,5 @@
 
+
 // src/lib/cycle-calculator.ts
 import { addDays, subDays, format } from 'date-fns';
 import type { CyclePrediction } from './types';
@@ -20,15 +21,17 @@ interface PhaseInfo {
     description: string;
     color: string;
     chartColor: string;
+    pregnancyChance: number; // Percentage
+    shortName: string;
 }
 
 // Storing UI-related info here to keep it coupled with the logic
 const PHASE_INFO_MAP: Record<PhaseName, PhaseInfo> = {
-    menstruation: { name: 'Menstruation', description: 'Days 1-7: Menstruation', color: 'bg-red-400/30 text-red-900 border-red-400/50', chartColor: '--chart-1' },
-    possibleToConceive1: { name: 'Possible to Conceive', description: 'Days 8-10: Possible to Conceive', color: 'bg-green-300/30 text-green-800 border-green-300/50', chartColor: '--chart-2' },
-    ovulation: { name: 'Ovulation', description: 'Days 11-14: Ovulation (Fertile Window)', color: 'bg-green-500/40 text-green-900 border-green-500/60 font-bold', chartColor: '--chart-3' },
-    possibleToConceive2: { name: 'Possible to Conceive', description: 'Days 15-17: Possible to Conceive (Danger Zone)', color: 'bg-green-400/30 text-green-900 border-green-400/50', chartColor: '--chart-2' },
-    unlikelyToConceive: { name: 'Luteal Phase', description: 'Days 18-28: Unlikely to Conceive (Safe Zone)', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50', chartColor: '--chart-4' }
+    menstruation: { name: 'Menstruation', description: 'Days 1-7: Menstruation', color: 'bg-red-400/30 text-red-900 border-red-400/50', chartColor: '--chart-1', pregnancyChance: 1, shortName: 'Menstruation' },
+    possibleToConceive1: { name: 'Possible to Conceive', description: 'Days 8-10: Possible to Conceive', color: 'bg-green-300/30 text-green-800 border-green-300/50', chartColor: '--chart-2', pregnancyChance: 30, shortName: 'Fertile' },
+    ovulation: { name: 'Ovulation', description: 'Days 11-14: Ovulation (Fertile Window)', color: 'bg-green-500/40 text-green-900 border-green-500/60 font-bold', chartColor: '--chart-3', pregnancyChance: 90, shortName: 'Ovulation' },
+    possibleToConceive2: { name: 'Possible to Conceive', description: 'Days 15-17: Possible to Conceive (Danger Zone)', color: 'bg-green-400/30 text-green-900 border-green-400/50', chartColor: '--chart-2', pregnancyChance: 25, shortName: 'Fertile' },
+    unlikelyToConceive: { name: 'Luteal Phase', description: 'Days 18-28: Unlikely to Conceive (Safe Zone)', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50', chartColor: '--chart-4', pregnancyChance: 1, shortName: 'Luteal' }
 };
 
 export function getPhaseInfo(phase: PhaseName): PhaseInfo {

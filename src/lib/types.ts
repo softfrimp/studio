@@ -1,4 +1,5 @@
 
+
 import type { PhaseName } from './cycle-calculator';
 
 export type PhaseData = { start: string; end: string };
@@ -23,6 +24,13 @@ export interface PieChartDataPoint {
   value: number; // duration in days
   fill: string; // HSL variable for chart color
 }
+
+export interface BarChartDataPoint {
+  name: string;
+  chance: number;
+  fill: string;
+}
+
 
 // Auth Types
 export interface SignUpData {
