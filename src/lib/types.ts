@@ -1,8 +1,12 @@
+
+import type { PhaseName } from './cycle-calculator';
+
+export type PhaseData = { start: string; end: string };
+
 export interface CyclePrediction {
+  cycleLength: number;
   // Dates are in 'yyyy-MM-dd' format
-  menstruation: { start: string; end: string };
-  fertile: { start: string; end: string }; // Fertile window
-  luteal: { start: string; end: string };
+  phases: Record<PhaseName, PhaseData | null>;
   nextMenstruationDate: string;
 }
 

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,18 +7,12 @@ import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CyclePrediction, CyclePhase } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
+import { getPhaseInfo, PhaseName } from '@/lib/cycle-calculator';
 
 type CycleCalendarViewProps = {
   prediction: CyclePrediction | null;
   initialDate?: Date | null;
 };
-
-const phaseInfo = {
-  menstruation: { name: 'Menstruation', color: 'bg-red-400/30 text-red-900 border-red-400/50' },
-  fertile: { name: 'Fertile Window', color: 'bg-green-400/30 text-green-900 border-green-400/50' },
-  luteal: { name: 'Luteal Phase', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50' },
-};
-
 
 export function CycleCalendarView({ prediction, initialDate }: CycleCalendarViewProps) {
   const [currentMonth, setCurrentMonth] = useState<Date>(initialDate || new Date());
@@ -31,23 +26,17 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
     let activePhases: CyclePhase[] = [];
     
     if (prediction) {
-      activePhases.push({ 
-        name: phaseInfo.menstruation.name, 
-        startDate: parseISO(prediction.menstruation.start), 
-        endDate: parseISO(prediction.menstruation.end), 
-        color: phaseInfo.menstruation.color 
-      });
-      activePhases.push({ 
-        name: phaseInfo.fertile.name, 
-        startDate: parseISO(prediction.fertile.start), 
-        endDate: parseISO(prediction.fertile.end), 
-        color: phaseInfo.fertile.color 
-      });
-      activePhases.push({ 
-        name: phaseInfo.luteal.name, 
-        startDate: parseISO(prediction.luteal.start), 
-        endDate: parseISO(prediction.luteal.end), 
-        color: phaseInfo.luteal.color
+      (Object.keys(prediction.phases) as PhaseName[]).forEach(phaseName => {
+        const phase = prediction.phases[phaseName];
+        if (phase) {
+          const phaseInfo = getPhaseInfo(phaseName);
+          activePhases.push({ 
+            name: phaseInfo.name, 
+            startDate: parseISO(phase.start), 
+            endDate: parseISO(phase.end), 
+            color: phaseInfo.color 
+          });
+        }
       });
     }
     
@@ -102,9 +91,10 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
   }
   
   const legendItems = [
-    phaseInfo.menstruation,
-    phaseInfo.fertile,
-    phaseInfo.luteal
+    getPhaseInfo('menstruation'),
+    getPhaseInfo('possibleToConceive1'),
+    getPhaseInfo('ovulation'),
+    getPhaseInfo('unlikelyToConceive'),
   ];
 
 

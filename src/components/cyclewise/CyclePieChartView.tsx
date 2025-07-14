@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -5,14 +6,9 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import { differenceInDays, parseISO } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { CyclePrediction, PieChartDataPoint } from '@/lib/types';
+import { getPhaseInfo, PhaseName } from '@/lib/cycle-calculator';
 
-const COLORS = {
-  menstruation: 'hsl(var(--chart-1))', 
-  fertile: 'hsl(var(--chart-3))',    
-  luteal: 'hsl(var(--chart-4))',       
-  other: 'hsl(var(--chart-5))',        
-};
-
+const getDays = (start: string, end: string) => differenceInDays(parseISO(end), parseISO(start)) + 1;
 
 export function CyclePieChartView({ prediction }: CyclePieChartViewProps) {
   const [pieData, setPieData] = useState<PieChartDataPoint[]>([]);
@@ -23,21 +19,47 @@ export function CyclePieChartView({ prediction }: CyclePieChartViewProps) {
     
     const data: PieChartDataPoint[] = [];
 
-    const getDays = (start: string, end: string) => differenceInDays(parseISO(end), parseISO(start)) + 1;
+    (Object.keys(prediction.phases) as PhaseName[]).forEach(phaseName => {
+        const phase = prediction.phases[phaseName];
+        if (phase) {
+            const phaseInfo = getPhaseInfo(phaseName);
+            data.push({
+                name: phaseInfo.name,
+                value: getDays(phase.start, phase.end),
+                fill: `hsl(var(${phaseInfo.chartColor}))`
+            });
+        }
+    });
 
-    data.push({ name: 'Menstruation', value: getDays(prediction.menstruation.start, prediction.menstruation.end), fill: COLORS.menstruation });
-    data.push({ name: 'Fertile Window', value: getDays(prediction.fertile.start, prediction.fertile.end), fill: COLORS.fertile });
-    data.push({ name: 'Luteal Phase', value: getDays(prediction.luteal.start, prediction.luteal.end), fill: COLORS.luteal });
+    const cycleLength = prediction.cycleLength;
+    setTotalCycleLength(cycleLength);
+    
+    // Combine the two "Possible to Conceive" phases for a cleaner chart
+    const combinedData: PieChartDataPoint[] = [];
+    const possibleToConceivePhases = data.filter(d => d.name.includes('Possible to Conceive'));
 
-    const accountedDays = data.reduce((sum, p) => sum + p.value, 0);
-    const cycleLength = accountedDays > 0 ? accountedDays : 28;
-
-    if (accountedDays < cycleLength) {
-        data.push({ name: 'Other', value: cycleLength - accountedDays, fill: COLORS.other });
+    if (possibleToConceivePhases.length > 0) {
+        const totalValue = possibleToConceivePhases.reduce((acc, p) => acc + p.value, 0);
+        combinedData.push({
+            name: 'Possible to Conceive',
+            value: totalValue,
+            fill: possibleToConceivePhases[0].fill
+        });
     }
 
-    setPieData(data.filter(d => d.value > 0));
-    setTotalCycleLength(cycleLength);
+    // Add other phases
+    data.forEach(d => {
+        if (!d.name.includes('Possible to Conceive')) {
+            combinedData.push(d);
+        }
+    });
+    
+    // Sort for consistent order
+    const phaseOrder = ['Menstruation', 'Possible to Conceive', 'Ovulation', 'Unlikely to Conceive'];
+    combinedData.sort((a, b) => phaseOrder.indexOf(a.name) - phaseOrder.indexOf(b.name));
+
+
+    setPieData(combinedData.filter(d => d.value > 0));
 
   }, [prediction]);
 

@@ -1,3 +1,4 @@
+
 // src/lib/cycle-calculator.ts
 import { addDays, subDays, format } from 'date-fns';
 import type { CyclePrediction } from './types';
@@ -6,6 +7,33 @@ interface CalculationInput {
   startDate: string; // ISO format YYYY-MM-DD
   cycleLength: number;
 }
+
+export type PhaseName = 
+  | 'menstruation' 
+  | 'possibleToConceive1' 
+  | 'ovulation' 
+  | 'possibleToConceive2'
+  | 'unlikelyToConceive';
+
+interface PhaseInfo {
+    name: string;
+    color: string;
+    chartColor: string;
+}
+
+// Storing UI-related info here to keep it coupled with the logic
+const PHASE_INFO_MAP: Record<PhaseName, PhaseInfo> = {
+    menstruation: { name: 'Menstruation', color: 'bg-red-400/30 text-red-900 border-red-400/50', chartColor: '--chart-1' },
+    possibleToConceive1: { name: 'Possible to Conceive', color: 'bg-green-300/30 text-green-800 border-green-300/50', chartColor: '--chart-2' },
+    ovulation: { name: 'Ovulation', color: 'bg-green-500/40 text-green-900 border-green-500/60 font-bold', chartColor: '--chart-3' },
+    possibleToConceive2: { name: 'Possible to Conceive', color: 'bg-green-300/30 text-green-800 border-green-300/50', chartColor: '--chart-2' }, // Same as first
+    unlikelyToConceive: { name: 'Unlikely to Conceive', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50', chartColor: '--chart-4' }
+};
+
+export function getPhaseInfo(phase: PhaseName): PhaseInfo {
+    return PHASE_INFO_MAP[phase];
+}
+
 
 /**
  * Calculates menstrual cycle phases based on a specific day-based model.
@@ -16,28 +44,40 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
   const { startDate, cycleLength } = input;
   const lastPeriodDate = new Date(startDate);
 
-  // Based on user-provided day ranges for a 28-day cycle.
-  // We'll adjust for different cycle lengths if needed, but for now, we'll use these offsets.
-
-  // Phase 1: Menstruation (Days 1-7)
-  const menstruationStart = lastPeriodDate;
-  const menstruationEnd = addDays(lastPeriodDate, 6); 
-
-  // Phase 2: Fertile Window (Days 8-17) - Combining "Possible to conceive" and "Ovulation"
-  const fertileStart = addDays(lastPeriodDate, 7);
-  const fertileEnd = addDays(lastPeriodDate, 16);
-
-  // Phase 3: Luteal Phase (Days 18-28, "Unlikely to conceive")
-  const lutealStart = addDays(lastPeriodDate, 17);
-  const nextMenstruationDate = addDays(lastPeriodDate, cycleLength);
-  const lutealEnd = subDays(nextMenstruationDate, 1);
-
   const formatDate = (date: Date) => format(date, 'yyyy-MM-dd');
 
+  // Day 1-7: Menstruation
+  const menstruationStart = lastPeriodDate;
+  const menstruationEnd = addDays(lastPeriodDate, 6);
+
+  // Day 8-10: Possible to Conceive
+  const possibleToConceive1Start = addDays(lastPeriodDate, 7);
+  const possibleToConceive1End = addDays(lastPeriodDate, 9);
+  
+  // Day 11-14: Ovulation
+  const ovulationStart = addDays(lastPeriodDate, 10);
+  const ovulationEnd = addDays(lastPeriodDate, 13);
+  
+  // Day 15-17: Possible to Conceive (Danger Zone)
+  const possibleToConceive2Start = addDays(lastPeriodDate, 14);
+  const possibleToConceive2End = addDays(lastPeriodDate, 16);
+
+  // Day 18-28: Unlikely to Conceive (Safe Zone)
+  const unlikelyToConceiveStart = addDays(lastPeriodDate, 17);
+  const nextMenstruationDate = addDays(lastPeriodDate, cycleLength);
+  // The end of this phase is the day before the next period
+  const unlikelyToConceiveEnd = subDays(nextMenstruationDate, 1);
+
+
   return {
-    menstruation: { start: formatDate(menstruationStart), end: formatDate(menstruationEnd) },
-    fertile: { start: formatDate(fertileStart), end: formatDate(fertileEnd) },
-    luteal: { start: formatDate(lutealStart), end: formatDate(lutealEnd) },
+    cycleLength,
+    phases: {
+      menstruation: { start: formatDate(menstruationStart), end: formatDate(menstruationEnd) },
+      possibleToConceive1: { start: formatDate(possibleToConceive1Start), end: formatDate(possibleToConceive1End) },
+      ovulation: { start: formatDate(ovulationStart), end: formatDate(ovulationEnd) },
+      possibleToConceive2: { start: formatDate(possibleToConceive2Start), end: formatDate(possibleToConceive2End) },
+      unlikelyToConceive: { start: formatDate(unlikelyToConceiveStart), end: formatDate(unlikelyToConceiveEnd) },
+    },
     nextMenstruationDate: formatDate(nextMenstruationDate),
   };
 }
