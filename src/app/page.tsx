@@ -23,9 +23,7 @@ import { useAuth } from '@/context/AuthContext';
 import {
   SidebarProvider,
   Sidebar,
-  SidebarHeader,
   SidebarContent,
-  SidebarTrigger,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -34,7 +32,6 @@ import {
 
 
 import type { CyclePrediction } from '@/lib/types';
-import { Button } from '@/components/ui/button';
 import { calculateCyclePhases } from '@/lib/cycle-calculator';
 
 const cardVariants = {
