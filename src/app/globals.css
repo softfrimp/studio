@@ -17,7 +17,7 @@ body {
     --popover: 240 10% 97%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 262.1 83.3% 57.8%; /* Vibrant Purple */
+    --primary: 340 82% 52%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 240 4.8% 95.9%;
@@ -26,32 +26,30 @@ body {
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 340 82% 52%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 262.1 83.3% 57.8%;
+    --ring: 340 82% 52%;
 
     --radius: 0.75rem;
 
-    /* Chart colors using a professional, distinct scheme */
-    --chart-1: 340 82% 61%; /* Menstruation - Soft Red */
-    --chart-2: 0 72% 51%;   /* Fertile Window - Deep Red */
-    --chart-3: 142 76% 36%; /* Ovulation - Green */
-    --chart-4: 221 83% 53%; /* Luteal - Blue */
-    --chart-5: 262 83% 58%; /* A purple accent */
+    --chart-1: 340 82% 61%;
+    --chart-2: 0 72% 51%;
+    --chart-3: 142 76% 36%;
+    --chart-4: 221 83% 53%;
+    --chart-5: 262 83% 58%;
 
-    /* Sidebar Colors */
     --sidebar-background: 240 10% 99%;
     --sidebar-foreground: 240 5.9% 10%;
     --sidebar-border: 240 5.9% 90%;
-    --sidebar-accent: 262.1 83.3% 57.8%;
+    --sidebar-accent: 340 82% 52%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-ring: 262.1 83.3% 57.8%;
+    --sidebar-ring: 340 82% 52%;
   }
 
   .dark {
@@ -64,7 +62,7 @@ body {
     --popover: 240 10% 3.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 262.1 83.3% 57.8%;
+    --primary: 340 82% 62%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 240 3.7% 15.9%;
@@ -81,22 +79,20 @@ body {
 
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 262.1 83.3% 57.8%;
+    --ring: 340 82% 62%;
     
-    /* Chart colors for dark theme */
-    --chart-1: 340 70% 55%; /* Menstruation - Soft Red */
-    --chart-2: 0 65% 55%;   /* Fertile Window - Deep Red */
-    --chart-3: 142 65% 40%; /* Ovulation - Green */
-    --chart-4: 215 70% 55%; /* Luteal - Blue */
-    --chart-5: 262 83% 68%; /* A purple accent */
+    --chart-1: 340 70% 55%;
+    --chart-2: 0 65% 55%;
+    --chart-3: 142 65% 40%;
+    --chart-4: 215 70% 55%;
+    --chart-5: 262 83% 68%;
 
-    /* Sidebar Colors */
     --sidebar-background: 240 10% 6%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-accent: 262.1 83.3% 57.8%;
+    --sidebar-accent: 340 82% 62%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-ring: 262.1 83.3% 57.8%;
+    --sidebar-ring: 340 82% 62%;
   }
 }
 
@@ -107,39 +103,4 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-}
-
-@layer utilities {
-  @keyframes fade-out {
-    from { opacity: 1; }
-    to { opacity: 0; }
-  }
-  .animate-fade-out {
-    animation-name: fade-out;
-  }
-
-  @keyframes pulse-slow {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.9;
-      transform: scale(1.02);
-    }
-  }
-  .animate-pulse-slow {
-    animation: pulse-slow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .bg-hero-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' width='80' height='80'%3E%3Cpath fill='%239C92AC' fill-opacity='0.1' d='M14 16H9v-2h5V9.87a4 4 0 1 1 2 0V14h5v2h-5v5.13a4 4 0 1 1-2 0V16zM24 4a4 4 0 0 1-8 0V0h8v4zm0 32a4 4 0 0 1-8 0v-4h8v4zm-2-22.13a4 4 0 1 1 2 0V14h5v2h-5v5.13a4 4 0 1 1-2 0V16H9v-2h5v-2.13zM44 48H39v-2h5v-5.13a4 4 0 1 1 2 0V46h5v2h-5v5.13a4 4 0 1 1-2 0V48zm-2-22.13a4 4 0 1 1 2 0V26h5v2h-5v5.13a4 4 0 1 1-2 0V28h-5v-2h5v-2.13zM64 16H59v-2h5V9.87a4 4 0 1 1 2 0V14h5v2h-5v5.13a4 4 0 1 1-2 0V16zm0 32H59v-2h5v-5.13a4 4 0 1 1 2 0V46h5v2h-5v5.13a4 4 0 1 1-2 0V48z'%3E%3C/path%3E%3C/svg%3E");
-  }
-
-}
-
-@layer components {
-    .glass {
-        @apply bg-card/60 backdrop-blur-lg border border-white/20 shadow-lg;
-    }
 }

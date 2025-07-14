@@ -16,12 +16,9 @@ export default {
       },
     },
     extend: {
-      fontFamily: {
-        sans: ["var(--font-geist-sans)"],
-        mono: ["var(--font-geist-mono)"],
-        body: ["var(--font-geist-sans)"],
-        headline: ["var(--font-geist-sans)"],
-        code: ["var(--font-geist-mono)"],
+       fontFamily: {
+        body: ['var(--font-alegreya)'],
+        headline: ['var(--font-alegreya)'],
       },
       colors: {
         background: 'hsl(var(--background))',
