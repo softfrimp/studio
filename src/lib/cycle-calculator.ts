@@ -27,9 +27,9 @@ interface PhaseInfo {
 // Storing UI-related info here to keep it coupled with the logic
 const PHASE_INFO_MAP: Record<PhaseName, PhaseInfo> = {
     menstruation: { name: 'Menstruation', description: 'Days 1-7: Menstruation', color: 'bg-red-300/50', textColor: 'text-red-900', chartColor: '--chart-1', pregnancyChance: 1, shortName: 'Menstruation' },
-    possibleToConceive1: { name: 'Fertile Window', description: 'Days 8-10: Possible to Conceive', color: 'bg-green-300/50', textColor: 'text-green-900', chartColor: '--chart-2', pregnancyChance: 30, shortName: 'Fertile' },
-    ovulation: { name: 'Ovulation', description: 'Days 11-15: Ovulation (Most Fertile)', color: 'bg-green-500/50', textColor: 'text-green-900', chartColor: '--chart-3', pregnancyChance: 90, shortName: 'Ovulation' },
-    possibleToConceive2: { name: 'Fertile Window', description: 'Days 16-17: Possible to Conceive', color: 'bg-green-300/50', textColor: 'text-green-900', chartColor: '--chart-2', pregnancyChance: 25, shortName: 'Fertile' },
+    possibleToConceive1: { name: 'Fertile Window', description: 'Days 8-13: Possible to Conceive', color: 'bg-green-300/50', textColor: 'text-green-900', chartColor: '--chart-2', pregnancyChance: 30, shortName: 'Fertile' },
+    ovulation: { name: 'Ovulation', description: 'Day 14: Ovulation (Most Fertile)', color: 'bg-green-500/50', textColor: 'text-green-900', chartColor: '--chart-3', pregnancyChance: 90, shortName: 'Ovulation' },
+    possibleToConceive2: { name: 'Fertile Window', description: 'Days 15-17: Possible to Conceive', color: 'bg-green-300/50', textColor: 'text-green-900', chartColor: '--chart-2', pregnancyChance: 25, shortName: 'Fertile' },
     unlikelyToConceive: { name: 'Luteal Phase', description: 'Days 18-28: Unlikely to Conceive (Safe Zone)', color: 'bg-blue-300/50', textColor: 'text-blue-900', chartColor: '--chart-4', pregnancyChance: 1, shortName: 'Luteal' }
 };
 
@@ -40,6 +40,9 @@ export function getPhaseInfo(phase: PhaseName): PhaseInfo {
 
 /**
  * Calculates menstrual cycle phases based on a specific day-based model.
+ * This model is a simplification and not medically precise.
+ * It assumes a standard 28-day cycle for phase definitions, but adapts the final
+ * phase length based on the user-provided cycle length.
  * @param input - The start date of the last period and the cycle length.
  * @returns An object containing the predicted dates for various cycle phases.
  */
@@ -53,16 +56,15 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
   const menstruationStart = lastPeriodDate;
   const menstruationEnd = addDays(lastPeriodDate, 6);
 
-  // Day 8-10: Possible to Conceive
+  // Day 8-13: Possible to Conceive
   const possibleToConceive1Start = addDays(lastPeriodDate, 7);
-  const possibleToConceive1End = addDays(lastPeriodDate, 9);
+  const possibleToConceive1End = addDays(lastPeriodDate, 12);
   
-  // Day 11-15: Ovulation (Expected day + 4 more days)
-  const ovulationStart = addDays(lastPeriodDate, 10);
-  const ovulationEnd = addDays(lastPeriodDate, 14);
+  // Day 14: Ovulation (just this one day)
+  const ovulationDay = addDays(lastPeriodDate, 13);
   
-  // Day 16-17: Possible to Conceive (Danger Zone)
-  const possibleToConceive2Start = addDays(lastPeriodDate, 15);
+  // Day 15-17: Possible to Conceive (Danger Zone)
+  const possibleToConceive2Start = addDays(lastPeriodDate, 14);
   const possibleToConceive2End = addDays(lastPeriodDate, 16);
 
   // Day 18 onwards: Unlikely to Conceive (Safe Zone)
@@ -76,7 +78,7 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
     phases: {
       menstruation: { start: formatDate(menstruationStart), end: formatDate(menstruationEnd) },
       possibleToConceive1: { start: formatDate(possibleToConceive1Start), end: formatDate(possibleToConceive1End) },
-      ovulation: { start: formatDate(ovulationStart), end: formatDate(ovulationEnd) },
+      ovulation: { start: formatDate(ovulationDay), end: formatDate(ovulationDay) },
       possibleToConceive2: { start: formatDate(possibleToConceive2Start), end: formatDate(possibleToConceive2End) },
       unlikelyToConceive: { start: formatDate(unlikelyToConceiveStart), end: formatDate(unlikelyToConceiveEnd) },
     },
