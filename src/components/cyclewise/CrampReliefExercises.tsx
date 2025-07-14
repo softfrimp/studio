@@ -48,6 +48,15 @@ const exercises = [
         hint: "walking nature"
     }
   },
+  {
+    name: "Jumping Jacks",
+    description: "A light cardio exercise that can boost circulation and release pain-relieving endorphins.",
+    steps: "Stand with your feet together and your arms at your sides. Simultaneously jump your feet out to the side while raising your arms above your head. Jump back to the starting position.",
+     image: {
+        src: "https://placehold.co/400x250.png",
+        hint: "jumping fitness"
+    }
+  },
 ];
 
 export function CrampReliefExercises() {
