@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope } from 'lucide-react';
 
-import { Header } from '@/components/cyclewise/Header';
 import {
   SidebarProvider,
   Sidebar,
@@ -87,16 +86,13 @@ export default function AiNursePage() {
             </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <div className="flex flex-col h-screen">
-            <Header />
-            <main className="flex-grow p-4">
-              <iframe
-                  src="https://share.imagica.ai/?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8"
-                  className="w-full h-full border-0 rounded-lg"
-                  title="AI Nurse"
-                  allow="camera; microphone"
-              ></iframe>
-            </main>
+          <div className="h-screen w-full">
+            <iframe
+                src="https://share.imagica.ai/?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8"
+                className="w-full h-full border-0"
+                title="AI Nurse"
+                allow="camera; microphone"
+            ></iframe>
           </div>
         </SidebarInset>
       </div>
