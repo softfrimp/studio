@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
   :root {
     --background: 240 10% 97%;
@@ -17,8 +13,8 @@ body {
     --popover: 240 10% 97%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 300 100% 42%;
-    --primary-foreground: 300 100% 98%;
+    --primary: 257 89% 95%; /* Soft Lavender */
+    --primary-foreground: 257 40% 10%;
 
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -26,15 +22,15 @@ body {
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 300 100% 42%;
-    --accent-foreground: 300 40% 98%;
+    --accent: 340 100% 94%; /* Pale Rose */
+    --accent-foreground: 340 40% 10%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 300 100% 42%;
+    --ring: 257 89% 60%;
 
     --radius: 0.75rem;
 
@@ -47,39 +43,39 @@ body {
     --sidebar-background: 240 10% 99%;
     --sidebar-foreground: 240 5.9% 10%;
     --sidebar-border: 240 5.9% 90%;
-    --sidebar-accent: 300 100% 42%;
-    --sidebar-accent-foreground: 300 40% 98%;
-    --sidebar-ring: 300 100% 42%;
+    --sidebar-accent: 257 89% 95%;
+    --sidebar-accent-foreground: 257 40% 10%;
+    --sidebar-ring: 257 89% 60%;
   }
 
   .dark {
-    --background: 300 10% 3.9%;
-    --foreground: 300 40% 98%;
+    --background: 260 10% 5%; /* Very subtly purple-tinted */
+    --foreground: 260 40% 98%;
 
-    --card: 300 10% 3.9%;
-    --card-foreground: 300 40% 98%;
+    --card: 260 10% 8%;
+    --card-foreground: 260 40% 98%;
 
-    --popover: 300 10% 3.9%;
-    --popover-foreground: 300 40% 98%;
+    --popover: 260 10% 8%;
+    --popover-foreground: 260 40% 98%;
 
-    --primary: 300 90% 60%;
-    --primary-foreground: 300 40% 98%;
+    --primary: 257 90% 65%; /* Soft Lavender */
+    --primary-foreground: 257 40% 98%;
 
-    --secondary: 300 5% 15.9%;
-    --secondary-foreground: 300 40% 98%;
+    --secondary: 260 5% 15.9%;
+    --secondary-foreground: 260 40% 98%;
 
-    --muted: 300 5% 15.9%;
-    --muted-foreground: 300 5% 64.9%;
+    --muted: 260 5% 15.9%;
+    --muted-foreground: 260 5% 64.9%;
 
-    --accent: 300 5% 15.9%;
-    --accent-foreground: 300 40% 98%;
+    --accent: 340 80% 60%; /* Pale Rose */
+    --accent-foreground: 340 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 300 40% 98%;
+    --destructive-foreground: 260 40% 98%;
 
-    --border: 300 5% 15.9%;
-    --input: 300 5% 15.9%;
-    --ring: 300 90% 60%;
+    --border: 260 5% 15.9%;
+    --input: 260 5% 15.9%;
+    --ring: 257 90% 65%;
     
     --chart-1: 0 60% 60%;
     --chart-2: 0 70% 55%;
@@ -87,12 +83,12 @@ body {
     --chart-4: 215 70% 55%;
     --chart-5: 295 80% 75%;
 
-    --sidebar-background: 300 10% 6%;
-    --sidebar-foreground: 300 40% 98%;
-    --sidebar-border: 300 5% 15.9%;
-    --sidebar-accent: 300 90% 60%;
-    --sidebar-accent-foreground: 300 40% 98%;
-    --sidebar-ring: 300 90% 60%;
+    --sidebar-background: 260 10% 6%;
+    --sidebar-foreground: 260 40% 98%;
+    --sidebar-border: 260 5% 15.9%;
+    --sidebar-accent: 257 90% 65%;
+    --sidebar-accent-foreground: 260 40% 98%;
+    --sidebar-ring: 257 90% 65%;
   }
 }
 
@@ -102,5 +98,23 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-alegreya);
   }
+
+  .glass {
+      @apply bg-card/60 backdrop-blur-xl border border-white/10 shadow-lg;
+  }
+}
+
+@layer utilities {
+    .bg-hero-pattern {
+        background-image:
+            radial-gradient(at 27% 37%, hsla(var(--primary) / 0.2) 0px, transparent 50%),
+            radial-gradient(at 97% 21%, hsla(var(--accent) / 0.2) 0px, transparent 50%),
+            radial-gradient(at 52% 99%, hsla(var(--primary) / 0.3) 0px, transparent 50%),
+            radial-gradient(at 10% 29%, hsla(var(--accent) / 0.2) 0px, transparent 50%),
+            radial-gradient(at 97% 96%, hsla(var(--background)) 0px, transparent 50%),
+            radial-gradient(at 33% 50%, hsla(var(--primary) / 0.15) 0px, transparent 50%),
+            radial-gradient(at 79% 53%, hsla(var(--accent) / 0.2) 0px, transparent 50%);
+    }
 }
