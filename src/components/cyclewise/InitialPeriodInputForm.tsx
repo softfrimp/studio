@@ -14,7 +14,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z.object({
   initialDate: z.date({
@@ -31,11 +30,10 @@ type InitialPeriodInputFormProps = {
   onSubmit: (date: Date, length: number) => Promise<void>;
   initialDate?: Date | null;
   cycleLength?: number;
+  isLoading: boolean;
 };
 
-export function InitialPeriodInputForm({ onSubmit, initialDate, cycleLength }: InitialPeriodInputFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+export function InitialPeriodInputForm({ onSubmit, initialDate, cycleLength, isLoading }: InitialPeriodInputFormProps) {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -55,23 +53,11 @@ export function InitialPeriodInputForm({ onSubmit, initialDate, cycleLength }: I
 
 
   async function handleSubmit(data: z.infer<typeof FormSchema>) {
-    setIsLoading(true);
-    try {
-      await onSubmit(data.initialDate, data.cycleLength);
-    } catch (error) {
-      console.error('Error predicting cycle:', error);
-      toast({
-        title: 'Error',
-        description: 'Could not generate cycle prediction. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await onSubmit(data.initialDate, data.cycleLength);
   }
 
   return (
-    <Card className="shadow-lg">
+    <Card className="glass">
       <CardHeader>
         <CardTitle className="font-headline text-xl">Start Your Journey</CardTitle>
         <CardDescription>Enter your last period start date and typical cycle length.</CardDescription>

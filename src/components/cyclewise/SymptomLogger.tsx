@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -8,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { NotebookText, Smile, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
@@ -22,13 +21,12 @@ const LogSchema = z.object({
 type SymptomLoggerProps = {
   onSubmit: (symptoms: string, mood: string, cycleHistory: string, initialPeriodDate: string) => Promise<void>;
   initialPeriodDate: Date | null | undefined; // To be used as initialPeriodDate for personalization
-  // cycleHistory prop could be added if we collect more detailed history
+  isLoading: boolean;
 };
 
 const moodOptions = ["Happy", "Sad", "Anxious", "Irritable", "Calm", "Energetic", "Tired", "Neutral"];
 
-export function SymptomLogger({ onSubmit, initialPeriodDate }: SymptomLoggerProps) {
-  const [isLoading, setIsLoading] = useState(false);
+export function SymptomLogger({ onSubmit, initialPeriodDate, isLoading }: SymptomLoggerProps) {
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof LogSchema>>({
@@ -44,33 +42,18 @@ export function SymptomLogger({ onSubmit, initialPeriodDate }: SymptomLoggerProp
       });
       return;
     }
-    setIsLoading(true);
-    try {
-      // For 'cycleHistory', we're simplifying. A real app would build this over time.
-      // Here, we'll just pass a placeholder or the initial period date as a very basic history.
-      const cycleHistoryPlaceholder = `Initial period: ${format(initialPeriodDate, 'yyyy-MM-dd')}. Current log for ${format(data.logDate || new Date(), 'yyyy-MM-dd')}: Symptoms - ${data.symptoms}, Mood - ${data.mood}.`;
-      const formattedInitialDate = format(initialPeriodDate, 'yyyy-MM-dd');
+    
+    // For 'cycleHistory', we're simplifying. A real app would build this over time.
+    // Here, we'll just pass a placeholder or the initial period date as a very basic history.
+    const cycleHistoryPlaceholder = `Initial period: ${format(initialPeriodDate, 'yyyy-MM-dd')}. Current log for ${format(data.logDate || new Date(), 'yyyy-MM-dd')}: Symptoms - ${data.symptoms}, Mood - ${data.mood}.`;
+    const formattedInitialDate = format(initialPeriodDate, 'yyyy-MM-dd');
 
-      await onSubmit(data.symptoms, data.mood, cycleHistoryPlaceholder, formattedInitialDate);
-      toast({
-        title: 'Log Saved!',
-        description: 'Your symptoms and mood have been logged, and predictions updated.',
-      });
-      form.reset({symptoms: '', mood: ''});
-    } catch (error) {
-      console.error('Error logging symptoms:', error);
-      toast({
-        title: 'Error',
-        description: 'Could not log symptoms. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await onSubmit(data.symptoms, data.mood, cycleHistoryPlaceholder, formattedInitialDate);
+    form.reset({symptoms: '', mood: ''});
   }
 
   return (
-    <Card className="shadow-lg">
+    <Card className="glass">
       <CardHeader>
         <CardTitle className="font-headline text-xl flex items-center gap-2">
           <NotebookText className="h-5 w-5 text-primary-foreground/80" />
