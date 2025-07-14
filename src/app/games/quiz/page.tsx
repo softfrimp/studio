@@ -20,12 +20,11 @@ import {
 } from '@/components/ui/sidebar';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import type { QuizQuestion } from '@/ai/flows/quiz-flow';
-import { generateQuiz } from '@/ai/flows/quiz-flow';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { PartyPopper, RefreshCw } from 'lucide-react';
+import { STATIC_QUIZ_QUESTIONS, type QuizQuestion } from '@/lib/constants';
 
 type GameState = 'start' | 'loading' | 'playing' | 'results';
 
@@ -46,21 +45,17 @@ export default function QuizPage() {
     }
   }, [user, loading, router]);
 
-  const startQuiz = async () => {
+  const startQuiz = () => {
     setGameState('loading');
-    try {
-      const generatedQuestions = await generateQuiz('menstrual health');
-      setQuestions(generatedQuestions);
+    // Simulate a brief loading period for a smoother transition
+    setTimeout(() => {
+      setQuestions(STATIC_QUIZ_QUESTIONS);
       setScore(0);
       setCurrentQuestionIndex(0);
       setSelectedAnswer(null);
       setIsCorrect(null);
       setGameState('playing');
-    } catch (error) {
-      console.error("Failed to generate quiz:", error);
-      // Fallback or error message
-      setGameState('start');
-    }
+    }, 500);
   };
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -104,8 +99,8 @@ export default function QuizPage() {
         return (
           <div className="text-center flex flex-col items-center gap-4">
             <Loader2 className="h-16 w-16 text-primary animate-spin" />
-            <h2 className="text-2xl font-headline font-bold">Generating Your Quiz...</h2>
-            <p className="text-muted-foreground">Our AI is crafting some questions for you!</p>
+            <h2 className="text-2xl font-headline font-bold">Getting Your Quiz Ready...</h2>
+            <p className="text-muted-foreground">Just a moment!</p>
           </div>
         );
       case 'playing':
@@ -193,7 +188,7 @@ export default function QuizPage() {
             <BrainCircuit className="h-16 w-16 text-primary" />
             <h2 className="text-3xl font-headline font-bold">Cycle Savvy Quiz</h2>
             <p className="text-muted-foreground max-w-md">
-              Our AI will generate a few questions to test your knowledge about menstrual health. Are you ready?
+              Test your knowledge about menstrual health. Are you ready?
             </p>
             <Button onClick={startQuiz} size="lg">
               Start Quiz
