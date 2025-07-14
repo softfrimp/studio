@@ -28,7 +28,7 @@ export function InspirationalQuotesDisplay() {
 
 
   return (
-    <Card className="shadow-lg">
+    <Card className="glass">
       <CardHeader>
         <CardTitle className="font-headline text-xl flex items-center gap-2">
           <QuoteIcon className="h-5 w-5 text-accent-foreground/80" />

@@ -20,7 +20,7 @@ export function FunFactsDisplay() {
 
 
   return (
-    <Card className="shadow-lg">
+    <Card className="glass">
       <CardHeader>
         <CardTitle className="font-headline text-xl flex items-center gap-2">
           <Lightbulb className="h-5 w-5 text-accent-foreground/80" />
