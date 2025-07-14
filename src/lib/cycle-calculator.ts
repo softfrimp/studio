@@ -42,27 +42,32 @@ export function getPhaseInfo(phase: PhaseName): PhaseInfo {
  */
 export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
   const { startDate, cycleLength } = input;
-  const lastPeriodDate = new Date(startDate);
+  const lastPeriodDate = new Date(startDate.replace(/-/g, '/')); // Use / to avoid timezone issues
 
   const formatDate = (date: Date) => format(date, 'yyyy-MM-dd');
 
   // Day 1-7: Menstruation
+  // Day 1 is lastPeriodDate. Phase lasts 7 days.
   const menstruationStart = lastPeriodDate;
   const menstruationEnd = addDays(lastPeriodDate, 6);
 
   // Day 8-10: Possible to Conceive
+  // Starts on day 8, which is 7 days after start.
   const possibleToConceive1Start = addDays(lastPeriodDate, 7);
   const possibleToConceive1End = addDays(lastPeriodDate, 9);
   
   // Day 11-14: Ovulation
+  // Starts on day 11, which is 10 days after start.
   const ovulationStart = addDays(lastPeriodDate, 10);
   const ovulationEnd = addDays(lastPeriodDate, 13);
   
   // Day 15-17: Possible to Conceive (Danger Zone)
+  // Starts on day 15, which is 14 days after start.
   const possibleToConceive2Start = addDays(lastPeriodDate, 14);
   const possibleToConceive2End = addDays(lastPeriodDate, 16);
 
   // Day 18-28: Unlikely to Conceive (Safe Zone)
+  // Starts on day 18, which is 17 days after start.
   const unlikelyToConceiveStart = addDays(lastPeriodDate, 17);
   const nextMenstruationDate = addDays(lastPeriodDate, cycleLength);
   // The end of this phase is the day before the next period
@@ -82,3 +87,7 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
   };
 }
 
+// Helper to fix date parsing issues in different environments
+function safeParseISO(dateString: string): Date {
+  return new Date(dateString.replace(/-/g, '/'));
+}
