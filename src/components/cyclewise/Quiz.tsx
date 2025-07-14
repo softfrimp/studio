@@ -1,15 +1,56 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, BrainCircuit, PartyPopper, RefreshCw } from 'lucide-react';
+import { BrainCircuit, PartyPopper, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { generateQuiz, type QuizQuestion } from '@/ai/flows/quiz-flow';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 
-type GameState = 'start' | 'loading' | 'playing' | 'results';
+// Define the type for a quiz question
+type QuizQuestion = {
+  questionText: string;
+  options: string[];
+  correctAnswerIndex: number;
+  explanation: string;
+};
+
+// Static quiz questions
+const STATIC_QUESTIONS: QuizQuestion[] = [
+    {
+      questionText: 'On average, how long is a typical menstrual cycle?',
+      options: ['14 days', '21 days', '28 days', '35 days'],
+      correctAnswerIndex: 2,
+      explanation: 'While cycles can range from 21 to 35 days, 28 days is the most commonly cited average length for a menstrual cycle.',
+    },
+    {
+      questionText: 'Which phase of the cycle includes the period?',
+      options: ['Ovulation', 'Luteal Phase', 'Follicular Phase', 'Secretory Phase'],
+      correctAnswerIndex: 2,
+      explanation: 'The follicular phase starts on the first day of your period and ends with ovulation. Menstruation is the beginning of this phase.',
+    },
+    {
+      questionText: 'What hormone surge triggers ovulation (the release of an egg)?',
+      options: ['Estrogen', 'Luteinizing Hormone (LH)', 'Progesterone', 'Testosterone'],
+      correctAnswerIndex: 1,
+      explanation: 'A sharp increase, or surge, in Luteinizing Hormone (LH) is the primary trigger that causes the ovary to release an egg.',
+    },
+    {
+      questionText: 'What is the common name for the phase after ovulation and before the period begins?',
+      options: ['Fertile Window', 'Luteal Phase', 'Menstruation', 'Ischemic Phase'],
+      correctAnswerIndex: 1,
+      explanation: 'The Luteal Phase is the second half of the menstrual cycle, starting after ovulation and ending with the start of the next period.',
+    },
+    {
+      questionText: 'Which of these is a common symptom of Premenstrual Syndrome (PMS)?',
+      options: ['Increased energy', 'Mood swings', 'Hair growth', 'Clearer skin'],
+      correctAnswerIndex: 1,
+      explanation: 'Mood swings, bloating, and fatigue are common symptoms of PMS, which occurs in the days leading up to menstruation.',
+    },
+  ];
+
+type GameState = 'start' | 'playing' | 'results';
 
 export function Quiz() {
   const [gameState, setGameState] = useState<GameState>('start');
@@ -19,21 +60,15 @@ export function Quiz() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const startQuiz = async () => {
-    setGameState('loading');
-    try {
-      const quizData = await generateQuiz('Menstrual Health');
-      setQuestions(quizData.questions);
-      setScore(0);
-      setCurrentQuestionIndex(0);
-      setSelectedAnswer(null);
-      setIsCorrect(null);
-      setGameState('playing');
-    } catch (error) {
-      console.error('Failed to generate quiz:', error);
-      // Handle error state, maybe show a toast
-      setGameState('start');
-    }
+  const startQuiz = () => {
+    // We shuffle the questions so the order is different each time
+    const shuffledQuestions = [...STATIC_QUESTIONS].sort(() => Math.random() - 0.5);
+    setQuestions(shuffledQuestions);
+    setScore(0);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setGameState('playing');
   };
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -65,13 +100,6 @@ export function Quiz() {
 
   const renderContent = () => {
     switch (gameState) {
-      case 'loading':
-        return (
-          <div className="flex flex-col items-center justify-center text-center h-full gap-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            <p className="text-muted-foreground">Generating your quiz...</p>
-          </div>
-        );
       case 'playing':
         const question = questions[currentQuestionIndex];
         return (
@@ -155,7 +183,7 @@ export function Quiz() {
             <BrainCircuit className="h-16 w-16 text-primary" />
             <h2 className="text-3xl font-headline font-bold">Cycle Savvy Quiz</h2>
             <p className="text-muted-foreground max-w-md">
-              Test your knowledge about menstrual health with this AI-generated quiz. Are you ready?
+              Test your knowledge about menstrual health with this fun quiz. Are you ready?
             </p>
             <Button onClick={startQuiz} size="lg">
               Start Quiz
