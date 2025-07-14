@@ -36,6 +36,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     let combinedFertileDays = 0;
     const data: PieChartDataPoint[] = [];
     
+    // This order determines the arrangement in the pie chart.
     const phaseOrder: PhaseName[] = ['menstruation', 'possibleToConceive1', 'ovulation', 'possibleToConceive2', 'unlikelyToConceive'];
 
     phaseOrder.forEach(phaseName => {
@@ -44,7 +45,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
             const phaseInfo = getPhaseInfo(phaseName);
             const days = getDays(phase.start, phase.end);
             if (days > 0) {
-              // Combine the two "possibleToConceive" phases into one "Fertile Window" for the pie chart
+              // Combine the two "possibleToConceive" phases into one "Fertile Window" for a cleaner pie chart
               if (phaseName.startsWith('possibleToConceive')) {
                 combinedFertileDays += days;
               } else {
@@ -52,24 +53,21 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
                     name: phaseInfo.name,
                     value: days,
                     fill: `hsl(var(${phaseInfo.chartColor}))`,
-                    description: phaseInfo.description // Pass description for tooltip/legend
                 });
               }
             }
         }
     });
 
-    // Add the combined fertile window data if it exists
+    // Add the combined fertile window data if it exists, inserting it after Menstruation
     if (combinedFertileDays > 0) {
       const fertileInfo = getPhaseInfo('possibleToConceive1');
-      data.splice(1, 0, { // Insert after menstruation
+      data.splice(1, 0, {
         name: fertileInfo.name,
         value: combinedFertileDays,
         fill: `hsl(var(${fertileInfo.chartColor}))`,
-        description: fertileInfo.description
       });
     }
-
 
     setTotalCycleLength(prediction.cycleLength);
     setPieData(data);

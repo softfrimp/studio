@@ -1,3 +1,4 @@
+
 // src/lib/cycle-calculator.ts
 import { addDays, subDays, format } from 'date-fns';
 import type { CyclePrediction } from './types';
@@ -25,7 +26,6 @@ interface PhaseInfo {
 }
 
 // Storing UI-related info here to keep it coupled with the logic
-// Colors are based on the provided image: Red, Pink, Green, Blue
 const PHASE_INFO_MAP: Record<PhaseName, PhaseInfo> = {
     menstruation: { name: 'Menstruation', description: 'Menstruation', color: 'bg-red-300/50', textColor: 'text-red-900', chartColor: '--chart-1', pregnancyChance: 1, shortName: 'Menstruation' },
     possibleToConceive1: { name: 'Fertile Window', description: 'Possible to Conceive', color: 'bg-pink-300/50', textColor: 'text-pink-900', chartColor: '--chart-5', pregnancyChance: 15, shortName: 'Fertile' },
