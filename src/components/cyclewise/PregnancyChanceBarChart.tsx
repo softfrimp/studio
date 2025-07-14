@@ -12,7 +12,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="p-2 bg-background/80 backdrop-blur-sm border rounded-md shadow-lg">
         <p className="font-bold text-foreground">{label}</p>
-        <p className="text-sm text-muted-foreground">{`Chance of Pregnancy: ${payload[0].value}%`}</p>
+        <p className="text-sm text-muted-foreground">{`Chance of Pregnancy: ~${payload[0].value}%`}</p>
       </div>
     );
   }
@@ -26,39 +26,26 @@ export function PregnancyChanceBarChart({ prediction }: { prediction: CyclePredi
     if (!prediction) return;
 
     const data: BarChartDataPoint[] = [];
-    const phaseOrder: PhaseName[] = ['menstruation', 'possibleToConceive1', 'ovulation', 'possibleToConceive2', 'unlikelyToConceive'];
+    const phaseOrder: PhaseName[] = ['menstruation', 'possibleToConceive1', 'ovulation', 'unlikelyToConceive'];
 
-    phaseOrder.forEach(phaseName => {
-      const phase = prediction.phases[phaseName];
-      if (phase) {
-        const phaseInfo = getPhaseInfo(phaseName);
-        data.push({
-          name: phaseInfo.shortName,
+    // We can simplify the bar chart to show the main phases
+    const displayPhases: Record<string, PhaseName> = {
+      'Menstruation': 'menstruation',
+      'Fertile Window': 'possibleToConceive1',
+      'Ovulation': 'ovulation',
+      'Luteal Phase': 'unlikelyToConceive'
+    };
+
+    Object.entries(displayPhases).forEach(([displayName, phaseName]) => {
+      const phaseInfo = getPhaseInfo(phaseName);
+       data.push({
+          name: displayName,
           chance: phaseInfo.pregnancyChance,
           fill: `hsl(var(${phaseInfo.chartColor}))`,
         });
-      }
     });
     
-    // De-duplicate phases with the same name for a cleaner chart, showing the highest chance.
-    const uniqueData: BarChartDataPoint[] = [];
-    const seenNames = new Set();
-    
-    // We want a specific order for the final chart
-    const displayOrder = ['Menstruation', 'Fertile', 'Ovulation', 'Luteal'];
-    
-    displayOrder.forEach(name => {
-      const phases = data.filter(d => d.name === name);
-      if (phases.length > 0) {
-        const maxChancePhase = phases.reduce((max, p) => p.chance > max.chance ? p : max, phases[0]);
-         if (!seenNames.has(name)) {
-            uniqueData.push(maxChancePhase);
-            seenNames.add(name);
-         }
-      }
-    });
-    
-    setBarData(uniqueData);
+    setBarData(data);
 
   }, [prediction]);
 

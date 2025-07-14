@@ -33,9 +33,9 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
   useEffect(() => {
     if (!prediction) return;
     
+    let combinedFertileDays = 0;
     const data: PieChartDataPoint[] = [];
     
-    // Use a defined order to ensure consistency
     const phaseOrder: PhaseName[] = ['menstruation', 'possibleToConceive1', 'ovulation', 'possibleToConceive2', 'unlikelyToConceive'];
 
     phaseOrder.forEach(phaseName => {
@@ -44,15 +44,32 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
             const phaseInfo = getPhaseInfo(phaseName);
             const days = getDays(phase.start, phase.end);
             if (days > 0) {
-              data.push({
-                  name: phaseInfo.name,
-                  value: days,
-                  fill: `hsl(var(${phaseInfo.chartColor}))`,
-                  description: phaseInfo.description // Pass description for tooltip/legend
-              });
+              // Combine the two "possibleToConceive" phases into one "Fertile Window" for the pie chart
+              if (phaseName.startsWith('possibleToConceive')) {
+                combinedFertileDays += days;
+              } else {
+                 data.push({
+                    name: phaseInfo.name,
+                    value: days,
+                    fill: `hsl(var(${phaseInfo.chartColor}))`,
+                    description: phaseInfo.description // Pass description for tooltip/legend
+                });
+              }
             }
         }
     });
+
+    // Add the combined fertile window data if it exists
+    if (combinedFertileDays > 0) {
+      const fertileInfo = getPhaseInfo('possibleToConceive1');
+      data.splice(1, 0, { // Insert after menstruation
+        name: fertileInfo.name,
+        value: combinedFertileDays,
+        fill: `hsl(var(${fertileInfo.chartColor}))`,
+        description: fertileInfo.description
+      });
+    }
+
 
     setTotalCycleLength(prediction.cycleLength);
     setPieData(data);
@@ -101,7 +118,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
             <Legend 
               formatter={(value, entry) => {
                 const { payload } = entry as any;
-                return <span className="text-foreground/80">{payload.description}</span>;
+                return <span className="text-foreground/80">{payload.name}</span>;
               }}
               wrapperStyle={{
                 paddingTop: '20px'
