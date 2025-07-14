@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { format, parseISO } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { Header } from '@/components/cyclewise/Header';
 import { InitialPeriodInputForm } from '@/components/cyclewise/InitialPeriodInputForm';
@@ -24,6 +25,20 @@ import { personalizeCyclePredictions } from '@/ai/flows/personalize-cycle-predic
 import type { CyclePrediction, PersonalizedCyclePrediction } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.5,
+      ease: 'easeOut',
+    },
+  }),
+};
+
 
 export default function CycleWisePage() {
   const [initialPeriodDate, setInitialPeriodDate] = useState<Date | null>(null);
@@ -114,60 +129,94 @@ export default function CycleWisePage() {
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          <section className="lg:col-span-1 flex flex-col gap-6">
-            <InitialPeriodInputForm 
-              onSubmit={(date, length) => handleInitialPeriodSubmit(date, length)}
-              initialDate={initialPeriodDate}
-              cycleLength={currentCycleLength}
-              isLoading={isLoading.basic}
-            />
-            <SymptomLogger 
-              onSubmit={handleSymptomLogSubmit} 
-              initialPeriodDate={initialPeriodDate}
-              isLoading={isLoading.personalized}
-            />
-          </section>
+          <motion.section 
+             className="lg:col-span-1 flex flex-col gap-6"
+             initial="hidden"
+             animate="visible"
+             variants={{
+                visible: { transition: { staggerChildren: 0.1 } }
+             }}
+          >
+            <motion.div variants={cardVariants} custom={0}>
+                <InitialPeriodInputForm 
+                  onSubmit={(date, length) => handleInitialPeriodSubmit(date, length)}
+                  initialDate={initialPeriodDate}
+                  cycleLength={currentCycleLength}
+                  isLoading={isLoading.basic}
+                />
+            </motion.div>
+             <motion.div variants={cardVariants} custom={1}>
+                <SymptomLogger 
+                  onSubmit={handleSymptomLogSubmit} 
+                  initialPeriodDate={initialPeriodDate}
+                  isLoading={isLoading.personalized}
+                />
+             </motion.div>
+          </motion.section>
 
-          <section className="lg:col-span-2 flex flex-col gap-6">
-            {noPredictionsAvailable ? (
-                 <Card className="glass">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-xl">Welcome to CycleWise!</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground">
-                            Begin by entering your last period's start date using the form on the left. 
-                            This will help CycleWise predict your upcoming cycle phases. You can then log symptoms 
-                            for more personalized insights.
-                        </p>
-                         <img src="https://placehold.co/600x300.png" alt="Placeholder for cycle tracking" data-ai-hint="wellness calendar" className="mt-4 rounded-md w-full h-auto object-cover"/>
-                    </CardContent>
-                </Card>
-            ) : (
-              <Tabs defaultValue="calendar" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-primary/20">
-                  <TabsTrigger value="calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendar View</TabsTrigger>
-                  <TabsTrigger value="piechart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Pie Chart View</TabsTrigger>
-                </TabsList>
-                <TabsContent value="calendar">
-                  <CycleCalendarView 
-                    basicPrediction={basicPrediction} 
-                    personalizedPrediction={personalizedPrediction}
-                    initialDate={initialPeriodDate}
-                  />
-                </TabsContent>
-                <TabsContent value="piechart">
-                  <CyclePieChartView 
-                    basicPrediction={basicPrediction} 
-                    personalizedPrediction={personalizedPrediction}
-                  />
-                </TabsContent>
-              </Tabs>
-            )}
+          <motion.section 
+            className="lg:col-span-2 flex flex-col gap-6"
+            initial="hidden"
+            animate="visible"
+            variants={{
+                visible: { transition: { staggerChildren: 0.1 } }
+            }}
+          >
+            <AnimatePresence mode="wait">
+                 <motion.div 
+                    key={noPredictionsAvailable ? 'empty' : 'tabs'}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                    variants={cardVariants} 
+                    custom={2}
+                 >
+                    {noPredictionsAvailable ? (
+                        <Card className="glass">
+                            <CardHeader>
+                                <CardTitle className="font-headline text-xl">Welcome to CycleWise!</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground">
+                                    Begin by entering your last period's start date using the form on the left. 
+                                    This will help CycleWise predict your upcoming cycle phases. You can then log symptoms 
+                                    for more personalized insights.
+                                </p>
+                                <img src="https://placehold.co/600x300.png" alt="Placeholder for cycle tracking" data-ai-hint="wellness calendar" className="mt-4 rounded-md w-full h-auto object-cover"/>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                    <Tabs defaultValue="calendar" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2 bg-primary/20">
+                        <TabsTrigger value="calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendar View</TabsTrigger>
+                        <TabsTrigger value="piechart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Pie Chart View</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="calendar">
+                        <CycleCalendarView 
+                            basicPrediction={basicPrediction} 
+                            personalizedPrediction={personalizedPrediction}
+                            initialDate={initialPeriodDate}
+                        />
+                        </TabsContent>
+                        <TabsContent value="piechart">
+                        <CyclePieChartView 
+                            basicPrediction={basicPrediction} 
+                            personalizedPrediction={personalizedPrediction}
+                        />
+                        </TabsContent>
+                    </Tabs>
+                    )}
+                 </motion.div>
+            </AnimatePresence>
 
-            <InspirationalQuotesDisplay />
-            <FunFactsDisplay />
-          </section>
+            <motion.div variants={cardVariants} custom={3}>
+                <InspirationalQuotesDisplay />
+            </motion.div>
+             <motion.div variants={cardVariants} custom={4}>
+                <FunFactsDisplay />
+            </motion.div>
+          </motion.section>
         </div>
       </main>
     </div>
