@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import type { QuizQuestion } from '@/lib/types';
+import type { QuizQuestion } from '@/ai/flows/quiz-flow';
 import { generateQuiz } from '@/ai/flows/quiz-flow';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -96,7 +96,7 @@ export default function QuizPage() {
     );
   }
 
-  const progress = (currentQuestionIndex / questions.length) * 100;
+  const progress = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   const renderContent = () => {
     switch (gameState) {
@@ -109,6 +109,7 @@ export default function QuizPage() {
           </div>
         );
       case 'playing':
+        if (questions.length === 0) return null;
         const question = questions[currentQuestionIndex];
         return (
           <motion.div
@@ -117,6 +118,7 @@ export default function QuizPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.3 }}
+            className="w-full"
           >
             <Progress value={progress} className="w-full mb-4" />
             <CardHeader>
