@@ -3,9 +3,10 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Link2 } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 import {
   SidebarProvider,
@@ -17,31 +18,18 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 export default function AiNursePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [url, setUrl] = useState('https://share.imagica.ai/?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8');
-  const [inputValue, setInputValue] = useState(url);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
-
-  const handleSetUrl = (e: React.FormEvent) => {
-    e.preventDefault();
-    // A simple validation to ensure it's a URL-like string
-    if (inputValue.startsWith('http://') || inputValue.startsWith('https://')) {
-        setUrl(inputValue);
-    } else {
-        alert('Please enter a valid URL starting with http:// or https://');
-    }
-  };
 
   if (loading || !user) {
     return (
@@ -101,35 +89,42 @@ export default function AiNursePage() {
             </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <div className="flex h-screen w-full flex-col">
-            <Card className="m-4">
+          <div className="flex h-screen w-full flex-col items-center justify-center p-4">
+            <Card className="w-full max-w-lg text-center glass">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Link2 className="h-5 w-5"/>
-                        Set AI Nurse Website
+                    <CardTitle className="font-headline text-3xl flex items-center justify-center gap-3">
+                        <Stethoscope className="h-8 w-8"/>
+                        AI Nurse
                     </CardTitle>
+                    <CardDescription className="text-lg">
+                        Have questions about your health? Click below to chat with our AI-powered health assistant.
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSetUrl} className="flex items-center gap-2">
-                        <Input
-                            type="url"
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            placeholder="https://example.com"
-                        />
-                        <Button type="submit">Set Link</Button>
-                    </form>
+                    <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={{
+                            scale: [1, 1.02, 1],
+                            transition: {
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }
+                        }}
+                    >
+                        <Button asChild size="lg" className="h-14 text-xl">
+                            <Link href="https://share.imagica.ai?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8" target="_blank" rel="noopener noreferrer">
+                                <Sparkles className="mr-3 h-6 w-6" />
+                                Launch AI Nurse
+                            </Link>
+                        </Button>
+                    </motion.div>
+                     <p className="text-xs text-muted-foreground mt-4">
+                        You will be redirected to an external website. Please remember that this AI is for informational purposes only and is not a substitute for professional medical advice.
+                    </p>
                 </CardContent>
             </Card>
-            <div className="flex-grow p-4 pt-0">
-                <iframe
-                    key={url}
-                    src={url}
-                    className="w-full h-full border rounded-md"
-                    title="AI Nurse"
-                    allow="camera; microphone"
-                ></iframe>
-            </div>
           </div>
         </SidebarInset>
       </div>
