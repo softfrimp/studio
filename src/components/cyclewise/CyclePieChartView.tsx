@@ -10,7 +10,7 @@ import { getPhaseInfo, PhaseName } from '@/lib/cycle-calculator';
 
 const getDays = (start: string, end: string) => differenceInDays(parseISO(end), parseISO(start)) + 1;
 
-export function CyclePieChartView({ prediction }: CyclePieChartViewProps) {
+export function CyclePieChartView({ prediction }: { prediction: CyclePrediction | null; }) {
   const [pieData, setPieData] = useState<PieChartDataPoint[]>([]);
   const [totalCycleLength, setTotalCycleLength] = useState<number>(0);
 
@@ -107,7 +107,3 @@ export function CyclePieChartView({ prediction }: CyclePieChartViewProps) {
     </Card>
   );
 }
-
-type CyclePieChartViewProps = {
-  prediction: CyclePrediction | null;
-};

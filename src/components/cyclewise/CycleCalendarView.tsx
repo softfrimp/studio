@@ -50,7 +50,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
   }, [prediction, initialDate]);
 
   const modifiers = phases.reduce((acc, phase) => {
-    const key = phase.name.toLowerCase().replace(/\s+/g, '-');
+    const key = phase.name.toLowerCase().replace(/\s+/g, '-') + '-' + format(phase.startDate, 'T');
     acc[key] = { from: phase.startDate, to: phase.endDate };
     return acc;
   }, {} as Record<string, { from: Date, to: Date } | Date>);
@@ -58,7 +58,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
   modifiers['today'] = new Date();
 
   const modifiersClassNames = phases.reduce((acc, phase) => {
-    const key = phase.name.toLowerCase().replace(/\s+/g, '-');
+    const key = phase.name.toLowerCase().replace(/\s+/g, '-') + '-' + format(phase.startDate, 'T');
     acc[key] = phase.color.replace(/border-[\w-\/]+/, ''); // Remove border for background
     return acc;
   }, {} as Record<string, string>);
