@@ -32,18 +32,19 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
         const phase = prediction.phases[phaseName];
         if (phase) {
           const phaseInfo = getPhaseInfo(phaseName);
-          const key = phaseInfo.name.replace(/\s+/g, '-').toLowerCase();
+          // Use a unique key for each phase to avoid conflicts
+          const key = phaseName;
           modifiers[key] = { from: parseISO(phase.start), to: parseISO(phase.end) };
-          modifiersClassNames[key] = `${phaseInfo.color} ${phaseInfo.textColor}`;
+          modifiersClassNames[key] = phaseInfo.color;
         }
       });
   }
   
   const legendItems = [
     getPhaseInfo('menstruation'),
-    getPhaseInfo('possibleToConceive1'),
+    getPhaseInfo('possibleToConceive1'), // Represents the Fertile Window
     getPhaseInfo('ovulation'),
-    getPhaseInfo('unlikelyToConceive'),
+    getPhaseInfo('unlikelyToConceive'), // Represents the Luteal Phase
   ];
   const uniqueLegendItems = legendItems.filter((item, index, self) =>
     index === self.findIndex((t) => t.name === item.name)
@@ -57,7 +58,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
       <CardContent>
         <div className="mb-4 flex flex-wrap gap-2">
           {uniqueLegendItems.map((item) => (
-             <Badge key={item.name} variant="outline" className={`px-2 py-1 ${item.color} ${item.textColor} border-foreground/20`}>
+             <Badge key={item.name} variant="outline" className={`px-2 py-1 ${item.color.replace('day_', '')} ${item.textColor} border-foreground/20`}>
               {item.name}
             </Badge>
           ))}
@@ -70,13 +71,21 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
           modifiersClassNames={modifiersClassNames}
           className="p-0 rounded-md border"
           classNames={{
-            day: "h-9 w-9 p-0 font-normal",
             day_selected: 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md',
             day_today: 'bg-accent text-accent-foreground rounded-full',
             day_outside: "text-muted-foreground opacity-50",
+            day_disabled: 'text-muted-foreground opacity-50',
+            day_range_middle: 'aria-selected:bg-accent/50',
+            day: 'h-9 w-9 p-0 font-normal',
+            day_menstruation: 'bg-red-400/50 text-red-900 rounded-md',
+            day_possibleToConceive1: 'bg-primary/50 text-primary-foreground rounded-md',
+            day_ovulation: 'bg-green-400/50 text-green-900 rounded-md',
+            day_possibleToConceive2: 'bg-primary/50 text-primary-foreground rounded-md',
+            day_unlikelyToConceive: 'bg-blue-300/50 text-blue-900 rounded-md'
           }}
         />
       </CardContent>
     </Card>
   );
 }
+
