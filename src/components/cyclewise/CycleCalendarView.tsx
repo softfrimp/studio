@@ -31,7 +31,8 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
         if (phase) {
           const phaseInfo = getPhaseInfo(phaseName);
           activePhases.push({ 
-            name: phaseInfo.name, 
+            name: phaseInfo.name,
+            description: phaseInfo.description,
             startDate: parseISO(phase.start), 
             endDate: parseISO(phase.end), 
             color: phaseInfo.color 
@@ -50,7 +51,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
   }, [prediction, initialDate]);
 
   const modifiers = phases.reduce((acc, phase) => {
-    const key = phase.name.toLowerCase().replace(/\s+/g, '-') + '-' + format(phase.startDate, 'T');
+    const key = phase.description.toLowerCase().replace(/[^a-z0-9]/g, '-');
     acc[key] = { from: phase.startDate, to: phase.endDate };
     return acc;
   }, {} as Record<string, { from: Date, to: Date } | Date>);
@@ -58,7 +59,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
   modifiers['today'] = new Date();
 
   const modifiersClassNames = phases.reduce((acc, phase) => {
-    const key = phase.name.toLowerCase().replace(/\s+/g, '-') + '-' + format(phase.startDate, 'T');
+    const key = phase.description.toLowerCase().replace(/[^a-z0-9]/g, '-');
     acc[key] = phase.color.replace(/border-[\w-\/]+/, ''); // Remove border for background
     return acc;
   }, {} as Record<string, string>);
