@@ -26,7 +26,7 @@ import { Progress } from '@/components/ui/progress';
 import { PartyPopper, RefreshCw } from 'lucide-react';
 import { STATIC_QUIZ_QUESTIONS, type QuizQuestion } from '@/lib/constants';
 
-type GameState = 'start' | 'loading' | 'playing' | 'results';
+type GameState = 'start' | 'playing' | 'results';
 
 export default function QuizPage() {
   const { user, loading } = useAuth();
@@ -46,16 +46,12 @@ export default function QuizPage() {
   }, [user, loading, router]);
 
   const startQuiz = () => {
-    setGameState('loading');
-    // Simulate a brief loading period for a smoother transition
-    setTimeout(() => {
-      setQuestions(STATIC_QUIZ_QUESTIONS);
-      setScore(0);
-      setCurrentQuestionIndex(0);
-      setSelectedAnswer(null);
-      setIsCorrect(null);
-      setGameState('playing');
-    }, 500);
+    setQuestions(STATIC_QUIZ_QUESTIONS);
+    setScore(0);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setGameState('playing');
   };
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -95,14 +91,6 @@ export default function QuizPage() {
 
   const renderContent = () => {
     switch (gameState) {
-      case 'loading':
-        return (
-          <div className="text-center flex flex-col items-center gap-4">
-            <Loader2 className="h-16 w-16 text-primary animate-spin" />
-            <h2 className="text-2xl font-headline font-bold">Getting Your Quiz Ready...</h2>
-            <p className="text-muted-foreground">Just a moment!</p>
-          </div>
-        );
       case 'playing':
         if (questions.length === 0) return null;
         const question = questions[currentQuestionIndex];
@@ -174,7 +162,7 @@ export default function QuizPage() {
               You scored {score} out of {questions.length}!
             </p>
             <div className="w-full max-w-xs">
-                <Button onClick={startQuiz} className="w-full">
+                <Button onClick={restartQuiz} className="w-full">
                   <RefreshCw className="mr-2" />
                   Play Again
                 </Button>
