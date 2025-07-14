@@ -15,6 +15,7 @@ import { CyclePieChartView } from '@/components/cyclewise/CyclePieChartView';
 import { PregnancyChanceBarChart } from '@/components/cyclewise/PregnancyChanceBarChart';
 import { InspirationalQuotesDisplay } from '@/components/cyclewise/InspirationalQuotesDisplay';
 import { FunFactsDisplay } from '@/components/cyclewise/FunFactsDisplay';
+import { CycleInfoSummary } from '@/components/cyclewise/CycleInfoSummary';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -178,10 +179,15 @@ export default function CycleWisePage() {
                     isLoading={isLoading}
                   />
               </motion.div>
-               <motion.div variants={cardVariants} custom={1}>
+              {!noPredictionsAvailable && (
+                <motion.div variants={cardVariants} custom={1}>
+                  <CycleInfoSummary prediction={prediction} />
+                </motion.div>
+              )}
+               <motion.div variants={cardVariants} custom={2}>
                   <InspirationalQuotesDisplay />
               </motion.div>
-               <motion.div variants={cardVariants} custom={2}>
+               <motion.div variants={cardVariants} custom={3}>
                   <FunFactsDisplay />
               </motion.div>
             </motion.section>
@@ -202,7 +208,7 @@ export default function CycleWisePage() {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.5 }}
                       variants={cardVariants} 
-                      custom={3}
+                      custom={4}
                    >
                       {noPredictionsAvailable ? (
                           <Card className="glass">
