@@ -12,6 +12,14 @@ type CycleCalendarViewProps = {
   initialDate?: Date | null;
 };
 
+const phaseInfo = {
+  menstruation: { name: 'Menstruation', color: 'bg-red-400/30 text-red-900 border-red-400/50' },
+  follicular: { name: 'Follicular', color: 'bg-pink-400/30 text-pink-900 border-pink-400/50' },
+  ovulation: { name: 'Ovulation', color: 'bg-green-400/30 text-green-900 border-green-400/50' },
+  luteal: { name: 'Luteal', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50' },
+};
+
+
 export function CycleCalendarView({ prediction, initialDate }: CycleCalendarViewProps) {
   const [currentMonth, setCurrentMonth] = useState<Date>(initialDate || new Date());
   const [phases, setPhases] = useState<CyclePhase[]>([]);
@@ -24,20 +32,30 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
     let activePhases: CyclePhase[] = [];
     
     if (prediction) {
-      const menstruationStart = parseISO(prediction.predictedMenstruationStartDate);
-      activePhases.push({ name: 'Menstruation', startDate: menstruationStart, endDate: addDays(menstruationStart, 4), color: 'bg-destructive/20 text-destructive-foreground' }); // Assuming 5 days
-
-      const ovulationStart = parseISO(prediction.ovulationStartDate);
-      const ovulationEnd = parseISO(prediction.ovulationEndDate);
-      activePhases.push({ name: 'Ovulation', startDate: ovulationStart, endDate: ovulationEnd, color: 'bg-accent/30 text-accent-foreground' });
-      
-      const safeStart = parseISO(prediction.safePeriodStart);
-      const safeEnd = parseISO(prediction.safePeriodEnd);
-      activePhases.push({ name: 'Safe Period', startDate: safeStart, endDate: safeEnd, color: 'bg-green-500/20 text-green-700' });
-
-      const dangerousStart = parseISO(prediction.dangerousPeriodStart);
-      const dangerousEnd = parseISO(prediction.dangerousPeriodEnd);
-      activePhases.push({ name: 'Fertile Window', startDate: dangerousStart, endDate: dangerousEnd, color: 'bg-orange-500/20 text-orange-700' });
+      activePhases.push({ 
+        name: phaseInfo.menstruation.name, 
+        startDate: parseISO(prediction.menstruation.start), 
+        endDate: parseISO(prediction.menstruation.end), 
+        color: phaseInfo.menstruation.color 
+      });
+      activePhases.push({ 
+        name: phaseInfo.follicular.name, 
+        startDate: parseISO(prediction.follicular.start), 
+        endDate: parseISO(prediction.follicular.end), 
+        color: phaseInfo.follicular.color 
+      });
+      activePhases.push({ 
+        name: phaseInfo.ovulation.name, 
+        startDate: parseISO(prediction.ovulation.start), 
+        endDate: parseISO(prediction.ovulation.end), 
+        color: phaseInfo.ovulation.color 
+      });
+      activePhases.push({ 
+        name: phaseInfo.luteal.name, 
+        startDate: parseISO(prediction.luteal.start), 
+        endDate: parseISO(prediction.luteal.end), 
+        color: phaseInfo.luteal.color
+      });
     }
     
     setPhases(activePhases);
@@ -50,14 +68,16 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
   }, [prediction, initialDate]);
 
   const modifiers = phases.reduce((acc, phase) => {
-    acc[phase.name.toLowerCase().replace(/\s+/g, '-')] = { from: phase.startDate, to: phase.endDate };
+    const key = phase.name.toLowerCase().replace(/\s+/g, '-');
+    acc[key] = { from: phase.startDate, to: phase.endDate };
     return acc;
   }, {} as Record<string, { from: Date, to: Date } | Date>);
 
   modifiers['today'] = new Date();
 
   const modifiersClassNames = phases.reduce((acc, phase) => {
-    acc[phase.name.toLowerCase().replace(/\s+/g, '-')] = phase.color;
+    const key = phase.name.toLowerCase().replace(/\s+/g, '-');
+    acc[key] = phase.color.replace(/border-[\w-\/]+/, ''); // Remove border for background
     return acc;
   }, {} as Record<string, string>);
 
@@ -88,9 +108,12 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
     );
   }
   
-  const legendItems = phases.map(p => ({name: p.name, color: p.color.split(' ')[0] })).filter((value, index, self) => 
-    index === self.findIndex((t) => (t.name === value.name && t.color === value.color))
-  );
+  const legendItems = [
+    phaseInfo.menstruation,
+    phaseInfo.follicular,
+    phaseInfo.ovulation,
+    phaseInfo.luteal
+  ];
 
 
   return (
@@ -101,7 +124,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
       <CardContent>
         <div className="mb-4 flex flex-wrap gap-2">
             {legendItems.map(item => (
-                <Badge key={item.name} variant="outline" className={`px-2 py-1 ${item.color} border-none`}>
+                <Badge key={item.name} variant="outline" className={`px-2 py-1 ${item.color}`}>
                    {item.name}
                 </Badge>
             ))}

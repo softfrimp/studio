@@ -1,12 +1,12 @@
 export interface CyclePrediction {
-  predictedMenstruationStartDate: string;
-  safePeriodStart: string;
-  safePeriodEnd: string;
-  ovulationStartDate: string;
-  ovulationEndDate: string;
-  dangerousPeriodStart: string;
-  dangerousPeriodEnd: string;
+  // Dates are in 'yyyy-MM-dd' format
+  menstruation: { start: string; end: string };
+  follicular: { start: string; end: string };
+  ovulation: { start: string; end: string }; // This is the most fertile window
+  luteal: { start: string; end: string };
+  nextMenstruationDate: string;
 }
+
 
 export interface CyclePhase {
   name: string;
