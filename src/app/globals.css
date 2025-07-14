@@ -38,10 +38,11 @@ body {
 
     --radius: 0.75rem; /* Slightly more rounded for softer look */
 
-    --chart-1: 340 80% 70%; 
-    --chart-2: 270 80% 75%;
-    --chart-3: 320 60% 70%;
-    --chart-4: 350 90% 70%;
+    /* Chart colors updated to better match the image */
+    --chart-1: 0 80% 70%; /* Red for Menstruation */
+    --chart-2: 80 80% 75%; /* Lighter Green for Possible to Conceive */
+    --chart-3: 120 70% 65%; /* Bright Green for Ovulation */
+    --chart-4: 210 80% 70%; /* Blue for Luteal/Safe Phase */
     --chart-5: 290 50% 70%;
   }
 
@@ -75,10 +76,10 @@ body {
     --input: 270 10% 20%;
     --ring: 340 70% 50%;
     
-    --chart-1: 340 60% 60%;
-    --chart-2: 270 70% 65%;
-    --chart-3: 320 50% 60%;
-    --chart-4: 350 80% 60%;
+    --chart-1: 0 70% 60%;
+    --chart-2: 80 70% 65%;
+    --chart-3: 120 60% 60%;
+    --chart-4: 210 70% 60%;
     --chart-5: 290 40% 60%;
   }
 }

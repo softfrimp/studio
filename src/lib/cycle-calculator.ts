@@ -26,9 +26,9 @@ interface PhaseInfo {
 const PHASE_INFO_MAP: Record<PhaseName, PhaseInfo> = {
     menstruation: { name: 'Menstruation', description: 'Days 1-7: Menstruation', color: 'bg-red-400/30 text-red-900 border-red-400/50', chartColor: '--chart-1' },
     possibleToConceive1: { name: 'Possible to Conceive', description: 'Days 8-10: Possible to Conceive', color: 'bg-green-300/30 text-green-800 border-green-300/50', chartColor: '--chart-2' },
-    ovulation: { name: 'Ovulation', description: 'Days 11-14: Ovulation', color: 'bg-green-500/40 text-green-900 border-green-500/60 font-bold', chartColor: '--chart-3' },
-    possibleToConceive2: { name: 'Danger Zone', description: 'Days 15-17: Possible to Conceive (Danger Zone)', color: 'bg-green-400/30 text-green-900 border-green-400/50', chartColor: '--chart-2' },
-    unlikelyToConceive: { name: 'Safe Zone', description: 'Days 18-28: Unlikely to Conceive (Safe Zone)', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50', chartColor: '--chart-4' }
+    ovulation: { name: 'Ovulation', description: 'Days 11-14: Ovulation (Fertile Window)', color: 'bg-green-500/40 text-green-900 border-green-500/60 font-bold', chartColor: '--chart-3' },
+    possibleToConceive2: { name: 'Possible to Conceive', description: 'Days 15-17: Possible to Conceive (Danger Zone)', color: 'bg-green-400/30 text-green-900 border-green-400/50', chartColor: '--chart-2' },
+    unlikelyToConceive: { name: 'Luteal Phase', description: 'Days 18-28: Unlikely to Conceive (Safe Zone)', color: 'bg-blue-400/30 text-blue-900 border-blue-400/50', chartColor: '--chart-4' }
 };
 
 export function getPhaseInfo(phase: PhaseName): PhaseInfo {
@@ -65,9 +65,8 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
 
   // Day 18-28: Unlikely to Conceive (Safe Zone)
   const unlikelyToConceiveStart = addDays(lastPeriodDate, 17);
-  const nextMenstruationDate = addDays(lastPeriodDate, cycleLength);
-  // The end of this phase is the day before the next period
-  const unlikelyToConceiveEnd = subDays(nextMenstruationDate, 1);
+  // The end of this phase is the day before the next period starts
+  const unlikelyToConceiveEnd = addDays(lastPeriodDate, cycleLength - 1);
 
 
   return {
@@ -79,11 +78,6 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
       possibleToConceive2: { start: formatDate(possibleToConceive2Start), end: formatDate(possibleToConceive2End) },
       unlikelyToConceive: { start: formatDate(unlikelyToConceiveStart), end: formatDate(unlikelyToConceiveEnd) },
     },
-    nextMenstruationDate: formatDate(nextMenstruationDate),
+    nextMenstruationDate: formatDate(addDays(lastPeriodDate, cycleLength)),
   };
-}
-
-// Helper to fix date parsing issues in different environments
-function safeParseISO(dateString: string): Date {
-  return new Date(dateString.replace(/-/g, '/'));
 }

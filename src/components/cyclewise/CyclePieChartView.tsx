@@ -8,7 +8,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import type { CyclePrediction, PieChartDataPoint } from '@/lib/types';
 import { getPhaseInfo, PhaseName } from '@/lib/cycle-calculator';
 
-const getDays = (start: string, end: string) => differenceInDays(parseISO(end), parseISO(start)) + 1;
+const getDays = (start: string, end: string) => {
+    if (!start || !end) return 0;
+    return differenceInDays(parseISO(end), parseISO(start)) + 1
+};
+
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="p-2 bg-background/80 backdrop-blur-sm border rounded-md shadow-lg">
+        <p className="font-bold text-foreground">{`${data.name}`}</p>
+        <p className="text-sm text-muted-foreground">{`Duration: ${data.value} days`}</p>
+      </div>
+    );
+  }
+  return null;
+};
 
 export function CyclePieChartView({ prediction }: { prediction: CyclePrediction | null; }) {
   const [pieData, setPieData] = useState<PieChartDataPoint[]>([]);
@@ -18,40 +34,28 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     if (!prediction) return;
     
     const data: PieChartDataPoint[] = [];
-    let totalDays = 0;
+    
+    // Use a defined order to ensure consistency
+    const phaseOrder: PhaseName[] = ['menstruation', 'possibleToConceive1', 'ovulation', 'possibleToConceive2', 'unlikelyToConceive'];
 
-    (Object.keys(prediction.phases) as PhaseName[]).forEach(phaseName => {
+    phaseOrder.forEach(phaseName => {
         const phase = prediction.phases[phaseName];
         if (phase) {
             const phaseInfo = getPhaseInfo(phaseName);
             const days = getDays(phase.start, phase.end);
-            totalDays += days;
-            data.push({
-                name: phaseInfo.description,
-                value: days,
-                fill: `hsl(var(${phaseInfo.chartColor}))`
-            });
+            if (days > 0) {
+              data.push({
+                  name: phaseInfo.name,
+                  value: days,
+                  fill: `hsl(var(${phaseInfo.chartColor}))`,
+                  description: phaseInfo.description // Pass description for tooltip/legend
+              });
+            }
         }
     });
 
-    const cycleLength = prediction.cycleLength;
-    setTotalCycleLength(cycleLength);
-    
-    // Sort for consistent order based on the new descriptions
-    const phaseOrder = [
-        'Days 1-7', 
-        'Days 8-10', 
-        'Days 11-14', 
-        'Days 15-17', 
-        'Days 18-28'
-    ];
-    data.sort((a, b) => {
-      const aIndex = phaseOrder.findIndex(p => a.name.startsWith(p));
-      const bIndex = phaseOrder.findIndex(p => b.name.startsWith(p));
-      return aIndex - bIndex;
-    });
-
-    setPieData(data.filter(d => d.value > 0));
+    setTotalCycleLength(prediction.cycleLength);
+    setPieData(data);
 
   }, [prediction]);
 
@@ -74,7 +78,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
         <CardTitle className="font-headline text-xl">Cycle Overview</CardTitle>
         <CardDescription>Estimated {totalCycleLength}-day cycle breakdown.</CardDescription>
       </CardHeader>
-      <CardContent className="h-[300px] w-full">
+      <CardContent className="h-[350px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -82,17 +86,27 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
               cx="50%"
               cy="50%"
               labelLine={false}
-              outerRadius={80}
+              outerRadius={100}
+              innerRadius={50}
               fill="#8884d8"
               dataKey="value"
-              label={({ name, value }) => `${name.split(':')[1].trim()} (${value}d)`}
+              label={({ name, value }) => `${name} (${value}d)`}
+              paddingAngle={2}
             >
               {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.fill} />
+                <Cell key={`cell-${index}`} fill={entry.fill} stroke={entry.fill} />
               ))}
             </Pie>
-            <Tooltip formatter={(value: number, name: string) => [`${name} (${value} days)`, 'Phase']} />
-            <Legend formatter={(value) => value.split(':')[1].trim()} />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend 
+              formatter={(value, entry) => {
+                const { payload } = entry as any;
+                return <span className="text-foreground/80">{payload.description}</span>;
+              }}
+              wrapperStyle={{
+                paddingTop: '20px'
+              }}
+            />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
