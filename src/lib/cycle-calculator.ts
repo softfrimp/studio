@@ -1,6 +1,3 @@
-
-
-
 // src/lib/cycle-calculator.ts
 import { addDays, subDays, format } from 'date-fns';
 import type { CyclePrediction } from './types';
@@ -31,8 +28,8 @@ interface PhaseInfo {
 const PHASE_INFO_MAP: Record<PhaseName, PhaseInfo> = {
     menstruation: { name: 'Menstruation', description: 'Days 1-7: Menstruation', color: 'bg-red-300/50', textColor: 'text-red-900', chartColor: '--chart-1', pregnancyChance: 1, shortName: 'Menstruation' },
     possibleToConceive1: { name: 'Fertile Window', description: 'Days 8-10: Possible to Conceive', color: 'bg-green-300/50', textColor: 'text-green-900', chartColor: '--chart-2', pregnancyChance: 30, shortName: 'Fertile' },
-    ovulation: { name: 'Ovulation', description: 'Days 11-14: Ovulation (Fertile Window)', color: 'bg-green-500/50', textColor: 'text-green-900', chartColor: '--chart-3', pregnancyChance: 90, shortName: 'Ovulation' },
-    possibleToConceive2: { name: 'Fertile Window', description: 'Days 15-17: Possible to Conceive (Danger Zone)', color: 'bg-green-300/50', textColor: 'text-green-900', chartColor: '--chart-2', pregnancyChance: 25, shortName: 'Fertile' },
+    ovulation: { name: 'Ovulation', description: 'Days 11-15: Ovulation (Most Fertile)', color: 'bg-green-500/50', textColor: 'text-green-900', chartColor: '--chart-3', pregnancyChance: 90, shortName: 'Ovulation' },
+    possibleToConceive2: { name: 'Fertile Window', description: 'Days 16-17: Possible to Conceive', color: 'bg-green-300/50', textColor: 'text-green-900', chartColor: '--chart-2', pregnancyChance: 25, shortName: 'Fertile' },
     unlikelyToConceive: { name: 'Luteal Phase', description: 'Days 18-28: Unlikely to Conceive (Safe Zone)', color: 'bg-blue-300/50', textColor: 'text-blue-900', chartColor: '--chart-4', pregnancyChance: 1, shortName: 'Luteal' }
 };
 
@@ -60,15 +57,15 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
   const possibleToConceive1Start = addDays(lastPeriodDate, 7);
   const possibleToConceive1End = addDays(lastPeriodDate, 9);
   
-  // Day 11-14: Ovulation
+  // Day 11-15: Ovulation (Expected day + 4 more days)
   const ovulationStart = addDays(lastPeriodDate, 10);
-  const ovulationEnd = addDays(lastPeriodDate, 13);
+  const ovulationEnd = addDays(lastPeriodDate, 14);
   
-  // Day 15-17: Possible to Conceive (Danger Zone)
-  const possibleToConceive2Start = addDays(lastPeriodDate, 14);
+  // Day 16-17: Possible to Conceive (Danger Zone)
+  const possibleToConceive2Start = addDays(lastPeriodDate, 15);
   const possibleToConceive2End = addDays(lastPeriodDate, 16);
 
-  // Day 18-28: Unlikely to Conceive (Safe Zone)
+  // Day 18 onwards: Unlikely to Conceive (Safe Zone)
   const unlikelyToConceiveStart = addDays(lastPeriodDate, 17);
   // The end of this phase is the day before the next period starts
   const unlikelyToConceiveEnd = addDays(lastPeriodDate, cycleLength - 1);
