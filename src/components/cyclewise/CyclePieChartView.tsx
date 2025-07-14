@@ -33,7 +33,6 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
   useEffect(() => {
     if (!prediction) return;
     
-    let combinedFertileDays = 0;
     const data: PieChartDataPoint[] = [];
     
     // This order determines the arrangement in the pie chart.
@@ -45,29 +44,14 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
             const phaseInfo = getPhaseInfo(phaseName);
             const days = getDays(phase.start, phase.end);
             if (days > 0) {
-              // Combine the two "possibleToConceive" phases into one "Fertile Window" for a cleaner pie chart
-              if (phaseName.startsWith('possibleToConceive')) {
-                combinedFertileDays += days;
-              } else {
-                 data.push({
-                    name: phaseInfo.name,
-                    value: days,
-                    fill: `hsl(var(${phaseInfo.chartColor}))`,
-                });
-              }
+              data.push({
+                  name: phaseInfo.name,
+                  value: days,
+                  fill: `hsl(var(${phaseInfo.chartColor}))`,
+              });
             }
         }
     });
-
-    // Add the combined fertile window data if it exists, inserting it after Menstruation
-    if (combinedFertileDays > 0) {
-      const fertileInfo = getPhaseInfo('possibleToConceive1');
-      data.splice(1, 0, {
-        name: fertileInfo.name,
-        value: combinedFertileDays,
-        fill: `hsl(var(${fertileInfo.chartColor}))`,
-      });
-    }
 
     setTotalCycleLength(prediction.cycleLength);
     setPieData(data);
@@ -105,7 +89,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
               innerRadius={50}
               fill="#8884d8"
               dataKey="value"
-              label={({ name, value }) => `${name} (${value}d)`}
+              label={({ name, value }) => `${name.replace(' (Follicular)','').replace(' (Luteal)','')} (${value}d)`}
               paddingAngle={2}
             >
               {pieData.map((entry, index) => (
@@ -128,5 +112,3 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     </Card>
   );
 }
-
-
