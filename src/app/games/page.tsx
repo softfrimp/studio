@@ -88,7 +88,7 @@ export default function GamesPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="flex justify-center items-center mb-4">
-                        <img src="https://placehold.co/400x250.png" alt="Quiz placeholder" data-ai-hint="brain knowledge" className="rounded-lg shadow-lg" />
+                        <img src="https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxxdWl6fGVufDB8fHx8MTc1MjQ4MDc4NXww&ixlib=rb-4.1.0&q=80&w=1080" alt="Quiz placeholder" className="rounded-lg shadow-lg" />
                     </div>
                      <p className="text-muted-foreground mb-4">
                         Think you're a period pro? Take our quiz to find out!
