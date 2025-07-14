@@ -2,9 +2,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { format, parseISO, addDays, subDays } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Gamepad2, LayoutDashboard, Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
 import { Header } from '@/components/cyclewise/Header';
 import { InitialPeriodInputForm } from '@/components/cyclewise/InitialPeriodInputForm';
@@ -18,11 +20,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarTrigger,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarInset,
+} from '@/components/ui/sidebar';
 
 
 import type { CyclePrediction } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
 import { calculateCyclePhases } from '@/lib/cycle-calculator';
 
 const cardVariants = {
@@ -99,96 +111,124 @@ export default function CycleWisePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <SidebarProvider>
+      <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <motion.section 
-             className="lg:col-span-1 flex flex-col gap-6"
-             initial="hidden"
-             animate="visible"
-             variants={{
-                visible: { transition: { staggerChildren: 0.1 } }
-             }}
-          >
-            <motion.div variants={cardVariants} custom={0}>
-                <InitialPeriodInputForm 
-                  onSubmit={(date, length) => handleInitialPeriodSubmit(date, length)}
-                  initialDate={initialPeriodDate}
-                  cycleLength={currentCycleLength}
-                  isLoading={isLoading}
-                />
-            </motion.div>
-             <motion.div variants={cardVariants} custom={1}>
-                <InspirationalQuotesDisplay />
-            </motion.div>
-             <motion.div variants={cardVariants} custom={2}>
-                <FunFactsDisplay />
-            </motion.div>
-          </motion.section>
+      <div className="flex flex-1">
+        <Sidebar>
+            <SidebarContent>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild isActive>
+                            <Link href="/">
+                                <LayoutDashboard />
+                                Dashboard
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href="/games">
+                                <Gamepad2 />
+                                Games
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarContent>
+        </Sidebar>
+        <SidebarInset>
+        <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <motion.section 
+               className="lg:col-span-1 flex flex-col gap-6"
+               initial="hidden"
+               animate="visible"
+               variants={{
+                  visible: { transition: { staggerChildren: 0.1 } }
+               }}
+            >
+              <motion.div variants={cardVariants} custom={0}>
+                  <InitialPeriodInputForm 
+                    onSubmit={(date, length) => handleInitialPeriodSubmit(date, length)}
+                    initialDate={initialPeriodDate}
+                    cycleLength={currentCycleLength}
+                    isLoading={isLoading}
+                  />
+              </motion.div>
+               <motion.div variants={cardVariants} custom={1}>
+                  <InspirationalQuotesDisplay />
+              </motion.div>
+               <motion.div variants={cardVariants} custom={2}>
+                  <FunFactsDisplay />
+              </motion.div>
+            </motion.section>
 
-          <motion.section 
-            className="lg:col-span-2 flex flex-col gap-6"
-            initial="hidden"
-            animate="visible"
-            variants={{
-                visible: { transition: { staggerChildren: 0.1 } }
-            }}
-          >
-            <AnimatePresence mode="wait">
-                 <motion.div 
-                    key={noPredictionsAvailable ? 'empty' : 'tabs'}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5 }}
-                    variants={cardVariants} 
-                    custom={3}
-                 >
-                    {noPredictionsAvailable ? (
-                        <Card className="glass">
-                            <CardHeader>
-                                <CardTitle className="font-headline text-xl">Welcome to CycleWise!</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-muted-foreground">
-                                    Begin by entering your last period's start date using the form on the left. 
-                                    This will help CycleWise predict your upcoming cycle phases.
-                                </p>
-                                <img src="https://placehold.co/600x300.png" alt="Placeholder for cycle tracking" data-ai-hint="wellness calendar" className="mt-4 rounded-md w-full h-auto object-cover"/>
-                            </CardContent>
-                        </Card>
-                    ) : (
-                    <Tabs defaultValue="calendar" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 bg-primary/20">
-                          <TabsTrigger value="calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendar</TabsTrigger>
-                          <TabsTrigger value="piechart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Pie Chart</TabsTrigger>
-                          <TabsTrigger value="barchart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Bar Chart</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="calendar">
-                          <CycleCalendarView 
-                              prediction={prediction} 
-                              initialDate={initialPeriodDate}
-                          />
-                        </TabsContent>
-                        <TabsContent value="piechart">
-                          <CyclePieChartView 
-                            prediction={prediction}
-                          />
-                        </TabsContent>
-                         <TabsContent value="barchart">
-                          <PregnancyChanceBarChart 
-                            prediction={prediction}
-                          />
-                        </TabsContent>
-                    </Tabs>
-                    )}
-                 </motion.div>
-            </AnimatePresence>
-          </motion.section>
+            <motion.section 
+              className="lg:col-span-2 flex flex-col gap-6"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                  visible: { transition: { staggerChildren: 0.1 } }
+              }}
+            >
+              <AnimatePresence mode="wait">
+                   <motion.div 
+                      key={noPredictionsAvailable ? 'empty' : 'tabs'}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.5 }}
+                      variants={cardVariants} 
+                      custom={3}
+                   >
+                      {noPredictionsAvailable ? (
+                          <Card className="glass">
+                              <CardHeader>
+                                  <CardTitle className="font-headline text-xl">Welcome to CycleWise!</CardTitle>
+                              </CardHeader>
+                              <CardContent>
+                                  <p className="text-muted-foreground">
+                                      Begin by entering your last period's start date using the form on the left. 
+                                      This will help CycleWise predict your upcoming cycle phases.
+                                  </p>
+                                  <img src="https://placehold.co/600x300.png" alt="Placeholder for cycle tracking" data-ai-hint="wellness calendar" className="mt-4 rounded-md w-full h-auto object-cover"/>
+                              </CardContent>
+                          </Card>
+                      ) : (
+                      <Tabs defaultValue="calendar" className="w-full">
+                          <TabsList className="grid w-full grid-cols-3 bg-primary/20">
+                            <TabsTrigger value="calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendar</TabsTrigger>
+                            <TabsTrigger value="piechart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Pie Chart</TabsTrigger>
+                            <TabsTrigger value="barchart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Bar Chart</TabsTrigger>
+                          </TabsList>
+                          <TabsContent value="calendar">
+                            <CycleCalendarView 
+                                prediction={prediction} 
+                                initialDate={initialPeriodDate}
+                            />
+                          </TabsContent>
+                          <TabsContent value="piechart">
+                            <CyclePieChartView 
+                              prediction={prediction}
+                            />
+                          </TabsContent>
+                           <TabsContent value="barchart">
+                            <PregnancyChanceBarChart 
+                              prediction={prediction}
+                            />
+                          </TabsContent>
+                      </Tabs>
+                      )}
+                   </motion.div>
+              </AnimatePresence>
+            </motion.section>
+          </div>
+        </main>
+        </SidebarInset>
         </div>
-      </main>
-    </div>
+        </div>
+    </SidebarProvider>
   );
 }
