@@ -94,6 +94,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
     getPhaseInfo('menstruation'),
     getPhaseInfo('possibleToConceive1'),
     getPhaseInfo('ovulation'),
+    getPhaseInfo('possibleToConceive2'),
     getPhaseInfo('unlikelyToConceive'),
   ];
 

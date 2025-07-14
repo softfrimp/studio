@@ -27,7 +27,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
             const days = getDays(phase.start, phase.end);
             totalDays += days;
             data.push({
-                name: phaseInfo.name,
+                name: phaseInfo.description,
                 value: days,
                 fill: `hsl(var(${phaseInfo.chartColor}))`
             });
@@ -37,8 +37,14 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     const cycleLength = prediction.cycleLength;
     setTotalCycleLength(cycleLength);
     
-    // Sort for consistent order
-    const phaseOrder = ['Menstruation', 'Possible to Conceive', 'Ovulation', 'Unlikely to Conceive'];
+    // Sort for consistent order based on the new descriptions
+    const phaseOrder = [
+        'Days 1-7', 
+        'Days 8-10', 
+        'Days 11-14', 
+        'Days 15-17', 
+        'Days 18-28'
+    ];
     data.sort((a, b) => {
       const aIndex = phaseOrder.findIndex(p => a.name.startsWith(p));
       const bIndex = phaseOrder.findIndex(p => b.name.startsWith(p));
@@ -79,14 +85,14 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"
-              label={({ name, value }) => `${name} (${value} days)`}
+              label={({ name, value }) => `${name.split(':')[1].trim()} (${value}d)`}
             >
               {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}
             </Pie>
-            <Tooltip formatter={(value: number, name: string) => [`${value} days`, name]}/>
-            <Legend />
+            <Tooltip formatter={(value: number, name: string) => [`${name} (${value} days)`, 'Phase']} />
+            <Legend formatter={(value) => value.split(':')[1].trim()} />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
