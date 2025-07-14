@@ -37,7 +37,6 @@ export default function QuizPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -50,7 +49,6 @@ export default function QuizPage() {
     setScore(0);
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
-    setIsCorrect(null);
     setGameState('playing');
   };
 
@@ -59,7 +57,6 @@ export default function QuizPage() {
 
     setSelectedAnswer(answerIndex);
     const correct = answerIndex === questions[currentQuestionIndex].correctAnswerIndex;
-    setIsCorrect(correct);
     if (correct) {
       setScore(score + 1);
     }
@@ -69,7 +66,6 @@ export default function QuizPage() {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
-      setIsCorrect(null);
     } else {
       setGameState('results');
     }
@@ -88,6 +84,8 @@ export default function QuizPage() {
   }
 
   const progress = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
+  const isCorrect = selectedAnswer !== null ? selectedAnswer === questions[currentQuestionIndex]?.correctAnswerIndex : null;
+
 
   const renderContent = () => {
     switch (gameState) {
