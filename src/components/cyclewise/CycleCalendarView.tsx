@@ -107,7 +107,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
       <CardContent>
         <div className="mb-4 flex flex-wrap gap-2">
             {legendItems.map(item => (
-                <Badge key={item.name} variant="outline" className={`px-2 py-1 ${item.color}`}>
+                <Badge key={item.description} variant="outline" className={`px-2 py-1 ${item.color}`}>
                    {item.name}
                 </Badge>
             ))}
