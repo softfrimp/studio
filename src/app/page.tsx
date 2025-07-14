@@ -43,26 +43,26 @@ export default function CycleWisePage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (loading) return; // Wait until loading is false
+    if (!user) {
       router.push('/login');
     } else if (user) {
-      // If user data is available, pre-fill the form/state
-      if (user.lastPeriodDate) {
+      if (user.lastPeriodDate && !initialPeriodDate) { // Check if initialPeriodDate is not already set
         const date = parseISO(user.lastPeriodDate);
         setInitialPeriodDate(date);
         setCurrentCycleLength(user.cycleLength || 28);
-        // Automatically trigger prediction on load if data exists
-        handleInitialPeriodSubmit(date, user.cycleLength || 28);
+        handleInitialPeriodSubmit(date, user.cycleLength || 28, true);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading, router]);
 
 
-  const handleInitialPeriodSubmit = async (date: Date, length: number) => {
-    setIsLoading(prev => ({ ...prev, basic: true }));
+  const handleInitialPeriodSubmit = async (date: Date, length: number, fromEffect = false) => {
+    if (!fromEffect) setIsLoading(prev => ({ ...prev, basic: true }));
     setInitialPeriodDate(date);
     setCurrentCycleLength(length);
-    updateInitialPeriod(date, length); // Update user context
+    updateInitialPeriod(date, length);
     try {
       const predictionData = await predictCycle({ 
         startDate: format(date, 'yyyy-MM-dd'),
@@ -71,12 +71,12 @@ export default function CycleWisePage() {
       setBasicPrediction(predictionData);
       setPersonalizedPrediction(null);
       setAiVoiceResponse(null); 
-      toast({ title: 'Cycle Predicted', description: 'Basic cycle prediction is ready.' });
+      if (!fromEffect) toast({ title: 'Cycle Predicted', description: 'Basic cycle prediction is ready.' });
     } catch (error) {
       console.error("Error in handleInitialPeriodSubmit:", error);
       toast({ title: 'Prediction Error', description: 'Failed to predict cycle.', variant: 'destructive' });
     } finally {
-      setIsLoading(prev => ({ ...prev, basic: false }));
+      if (!fromEffect) setIsLoading(prev => ({ ...prev, basic: false }));
     }
   };
 
@@ -137,7 +137,7 @@ export default function CycleWisePage() {
           
           <section className="lg:col-span-1 flex flex-col gap-6">
             <InitialPeriodInputForm 
-              onSubmit={handleInitialPeriodSubmit} 
+              onSubmit={(date, length) => handleInitialPeriodSubmit(date, length)}
               initialDate={initialPeriodDate}
               cycleLength={currentCycleLength}
             />
