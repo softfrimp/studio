@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CyclePrediction } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { getPhaseInfo, PhaseName } from '@/lib/cycle-calculator';
+import { cn } from '@/lib/utils';
 
 type CycleCalendarViewProps = {
   prediction: CyclePrediction | null;
@@ -35,7 +36,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
           // Use a unique key for each phase to avoid conflicts
           const key = phaseName;
           modifiers[key] = { from: parseISO(phase.start), to: parseISO(phase.end) };
-          modifiersClassNames[key] = phaseInfo.color;
+          modifiersClassNames[key] = `day_${phaseName}`;
         }
       });
   }
@@ -58,7 +59,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
       <CardContent>
         <div className="mb-4 flex flex-wrap gap-2">
           {uniqueLegendItems.map((item) => (
-             <Badge key={item.name} variant="outline" className={`px-2 py-1 ${item.color.replace('day_', '')} ${item.textColor} border-foreground/20`}>
+             <Badge key={item.name} variant="outline" className={cn('px-2 py-1', item.color, item.textColor, 'border-foreground/20')}>
               {item.name}
             </Badge>
           ))}
@@ -88,4 +89,3 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
     </Card>
   );
 }
-

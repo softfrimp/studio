@@ -17,7 +17,7 @@ export type PhaseName =
 interface PhaseInfo {
     name: string;
     description: string;
-    color: string;
+    color: string; // This will now be a Tailwind background color class
     textColor: string;
     chartColor: string;
     pregnancyChance: number; // Percentage
@@ -27,11 +27,11 @@ interface PhaseInfo {
 // Storing UI-related info here to keep it coupled with the logic
 // The `color` property should correspond to the key in calendar classNames
 const PHASE_INFO_MAP: Record<PhaseName, PhaseInfo> = {
-    menstruation: { name: 'Menstruation', description: 'Menstruation', color: 'day_menstruation', textColor: 'text-red-900', chartColor: '--chart-1', pregnancyChance: 1, shortName: 'Menstruation' },
-    possibleToConceive1: { name: 'Fertile Window', description: 'Likely to Conceive (Follicular)', color: 'day_possibleToConceive1', textColor: 'text-primary-foreground', chartColor: '--chart-2', pregnancyChance: 15, shortName: 'Fertile' },
-    ovulation: { name: 'Ovulation', description: 'Ovulation (Most Fertile)', color: 'day_ovulation', textColor: 'text-green-900', chartColor: '--chart-3', pregnancyChance: 90, shortName: 'Ovulation' },
-    possibleToConceive2: { name: 'Fertile Window', description: 'Likely to Conceive (Luteal)', color: 'day_possibleToConceive2', textColor: 'text-primary-foreground', chartColor: '--chart-2', pregnancyChance: 15, shortName: 'Fertile' },
-    unlikelyToConceive: { name: 'Luteal Phase', description: 'Unlikely to Conceive', color: 'day_unlikelyToConceive', textColor: 'text-blue-900', chartColor: '--chart-4', pregnancyChance: 1, shortName: 'Luteal' }
+    menstruation: { name: 'Menstruation', description: 'Menstruation', color: 'bg-red-400/50', textColor: 'text-red-900', chartColor: '--chart-1', pregnancyChance: 1, shortName: 'Menstruation' },
+    possibleToConceive1: { name: 'Fertile Window', description: 'Likely to Conceive (Follicular)', color: 'bg-primary/50', textColor: 'text-primary-foreground', chartColor: '--chart-2', pregnancyChance: 15, shortName: 'Fertile' },
+    ovulation: { name: 'Ovulation', description: 'Ovulation (Most Fertile)', color: 'bg-green-400/50', textColor: 'text-green-900', chartColor: '--chart-3', pregnancyChance: 90, shortName: 'Ovulation' },
+    possibleToConceive2: { name: 'Fertile Window', description: 'Likely to Conceive (Luteal)', color: 'bg-primary/50', textColor: 'text-primary-foreground', chartColor: '--chart-2', pregnancyChance: 15, shortName: 'Fertile' },
+    unlikelyToConceive: { name: 'Luteal Phase', description: 'Unlikely to Conceive', color: 'bg-blue-300/50', textColor: 'text-blue-900', chartColor: '--chart-4', pregnancyChance: 1, shortName: 'Luteal' }
 };
 
 export function getPhaseInfo(phase: PhaseName): PhaseInfo {
