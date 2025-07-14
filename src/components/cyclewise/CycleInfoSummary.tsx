@@ -27,7 +27,7 @@ export function CycleInfoSummary({ prediction }: CycleInfoSummaryProps) {
     return null;
   }
 
-  const { phases, nextMenstruationDate } = prediction;
+  const { phases, nextMenstruationWindow } = prediction;
 
   const summaryItems = [
     { name: 'Menstruation', phase: phases.menstruation, info: getPhaseInfo('menstruation') },
@@ -65,7 +65,7 @@ export function CycleInfoSummary({ prediction }: CycleInfoSummaryProps) {
                 Next Period
              </span>
              <Badge className="text-sm">
-                {format(parseISO(nextMenstruationDate), 'MMMM d, yyyy')}
+                {formatDateRange(nextMenstruationWindow.start, nextMenstruationWindow.end)}
              </Badge>
            </div>
         </div>

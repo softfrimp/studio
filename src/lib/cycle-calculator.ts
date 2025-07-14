@@ -72,6 +72,10 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
   // The end of this phase is the day before the next period starts
   const unlikelyToConceiveEnd = addDays(lastPeriodDate, cycleLength - 1);
 
+  // Calculate the next period window (5-day range)
+  const nextPeriodStart = addDays(lastPeriodDate, cycleLength);
+  const nextPeriodEnd = addDays(nextPeriodStart, 4);
+
 
   return {
     cycleLength,
@@ -82,6 +86,9 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
       possibleToConceive2: { start: formatDate(possibleToConceive2Start), end: formatDate(possibleToConceive2End) },
       unlikelyToConceive: { start: formatDate(unlikelyToConceiveStart), end: formatDate(unlikelyToConceiveEnd) },
     },
-    nextMenstruationDate: formatDate(addDays(lastPeriodDate, cycleLength)),
+    nextMenstruationWindow: {
+        start: formatDate(nextPeriodStart),
+        end: formatDate(nextPeriodEnd)
+    },
   };
 }

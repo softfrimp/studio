@@ -8,7 +8,7 @@ export interface CyclePrediction {
   cycleLength: number;
   // Dates are in 'yyyy-MM-dd' format
   phases: Record<PhaseName, PhaseData | null>;
-  nextMenstruationDate: string;
+  nextMenstruationWindow: { start: string; end: string; };
 }
 
 
