@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { addDays, differenceInDays, format, parseISO, startOfDay } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CyclePrediction, CyclePhase } from '@/lib/types';
@@ -20,50 +20,43 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
 
   useEffect(() => {
     setCurrentMonth(initialDate || new Date());
-  }, [initialDate])
+  }, [initialDate]);
 
   useEffect(() => {
     let activePhases: CyclePhase[] = [];
-    
     if (prediction) {
       (Object.keys(prediction.phases) as PhaseName[]).forEach(phaseName => {
         const phase = prediction.phases[phaseName];
         if (phase) {
           const phaseInfo = getPhaseInfo(phaseName);
-          activePhases.push({ 
+          activePhases.push({
             name: phaseInfo.name,
             description: phaseInfo.description,
-            startDate: parseISO(phase.start), 
-            endDate: parseISO(phase.end), 
-            color: phaseInfo.color 
+            startDate: parseISO(phase.start),
+            endDate: parseISO(phase.end),
+            color: phaseInfo.color,
           });
         }
       });
     }
-    
     setPhases(activePhases);
     if (activePhases.length > 0 && activePhases[0].startDate) {
       setCurrentMonth(activePhases[0].startDate);
     } else if (initialDate) {
       setCurrentMonth(initialDate);
     }
-
   }, [prediction, initialDate]);
 
-  const modifiers: Record<string, any> = {
-    today: new Date(),
-  };
-  const modifiersClassNames: Record<string, string> = {
-    today: 'border-2 border-primary rounded-md',
-  };
+  const modifiers: Record<string, any> = {};
+  const modifiersClassNames: Record<string, string> = {};
 
   phases.forEach((phase) => {
+    // Each modifier key must be unique. Using the description is a safe bet.
     const key = phase.description.toLowerCase().replace(/[^a-z0-9]/g, '-');
     modifiers[key] = { from: phase.startDate, to: phase.endDate };
-    // Remove border styles to only apply background color for the day cell
-    modifiersClassNames[key] = phase.color.replace(/border-[\w-\/]+/, '');
+    // This applies the background color directly.
+    modifiersClassNames[key] = phase.color;
   });
-
 
   if (phases.length === 0) {
     return (
@@ -78,17 +71,17 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
             selected={initialDate}
             month={currentMonth}
             onMonthChange={setCurrentMonth}
-            className="p-0 mt-4"
+            className="p-0 mt-4 rounded-md border"
             classNames={{
-                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                day_today: "bg-accent text-accent-foreground rounded-md",
+              day_selected: 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+              day_today: 'bg-accent text-accent-foreground rounded-md',
             }}
           />
         </CardContent>
       </Card>
     );
   }
-  
+
   const legendItems = [
     getPhaseInfo('menstruation'),
     getPhaseInfo('possibleToConceive1'),
@@ -97,7 +90,6 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
     getPhaseInfo('unlikelyToConceive'),
   ];
 
-
   return (
     <Card className="shadow-lg">
       <CardHeader>
@@ -105,11 +97,11 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
       </CardHeader>
       <CardContent>
         <div className="mb-4 flex flex-wrap gap-2">
-            {legendItems.map(item => (
-                <Badge key={item.description} variant="outline" className={`px-2 py-1 ${item.color}`}>
-                   {item.name}
-                </Badge>
-            ))}
+          {legendItems.map((item) => (
+            <Badge key={item.description} variant="outline" className={`px-2 py-1 ${item.color}`}>
+              {item.name}
+            </Badge>
+          ))}
         </div>
         <Calendar
           mode="single"
@@ -118,10 +110,10 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
           modifiers={modifiers}
           modifiersClassNames={modifiersClassNames}
           className="p-0 rounded-md border"
-           classNames={{
-                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                 day_today: `${modifiersClassNames['today']} bg-transparent`, // Keep today distinct if not part of another phase
-            }}
+          classNames={{
+            day_selected: 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+            day_today: 'bg-accent text-accent-foreground rounded-full',
+          }}
         />
       </CardContent>
     </Card>
