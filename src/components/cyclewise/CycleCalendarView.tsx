@@ -50,21 +50,19 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
 
   }, [prediction, initialDate]);
 
-  const modifiers = phases.reduce((acc, phase) => {
+  const modifiers: Record<string, any> = {
+    today: new Date(),
+  };
+  const modifiersClassNames: Record<string, string> = {
+    today: 'border-2 border-primary rounded-md',
+  };
+
+  phases.forEach((phase) => {
     const key = phase.description.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    acc[key] = { from: phase.startDate, to: phase.endDate };
-    return acc;
-  }, {} as Record<string, { from: Date, to: Date } | Date>);
-
-  modifiers['today'] = new Date();
-
-  const modifiersClassNames = phases.reduce((acc, phase) => {
-    const key = phase.description.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    acc[key] = phase.color.replace(/border-[\w-\/]+/, ''); // Remove border for background
-    return acc;
-  }, {} as Record<string, string>);
-
-  modifiersClassNames['today'] = 'border-2 border-primary rounded-md';
+    modifiers[key] = { from: phase.startDate, to: phase.endDate };
+    // Remove border styles to only apply background color for the day cell
+    modifiersClassNames[key] = phase.color.replace(/border-[\w-\/]+/, '');
+  });
 
 
   if (phases.length === 0) {
