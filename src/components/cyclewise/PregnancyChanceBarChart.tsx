@@ -51,7 +51,7 @@ export function PregnancyChanceBarChart({ prediction }: { prediction: CyclePredi
 
   if (barData.length === 0) {
     return (
-      <Card className="shadow-lg">
+      <Card className="glass shadow-lg">
         <CardHeader>
           <CardTitle className="font-headline text-xl">Pregnancy Chance</CardTitle>
         </CardHeader>
@@ -63,7 +63,7 @@ export function PregnancyChanceBarChart({ prediction }: { prediction: CyclePredi
   }
 
   return (
-    <Card className="shadow-lg">
+    <Card className="glass shadow-lg">
       <CardHeader>
         <CardTitle className="font-headline text-xl">Pregnancy Chance</CardTitle>
         <CardDescription>Estimated chance of conception by cycle phase.</CardDescription>

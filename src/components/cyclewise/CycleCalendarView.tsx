@@ -50,7 +50,7 @@ export function CycleCalendarView({ prediction, initialDate }: CycleCalendarView
   );
 
   return (
-    <Card className="shadow-lg">
+    <Card className="glass shadow-lg">
       <CardHeader>
         <CardTitle className="font-headline text-xl">Cycle Calendar</CardTitle>
       </CardHeader>

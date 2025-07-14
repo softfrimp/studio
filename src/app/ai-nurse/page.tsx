@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Header } from '@/components/cyclewise/Header';
 
 export default function AiNursePage() {
   const { user, loading } = useAuth();
@@ -89,7 +90,8 @@ export default function AiNursePage() {
             </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <div className="flex h-screen w-full flex-col items-center justify-center p-4">
+            <Header />
+            <div className="flex h-full flex-col items-center justify-center p-4">
             <Card className="w-full max-w-lg text-center glass">
                 <CardHeader>
                     <CardTitle className="font-headline text-3xl flex items-center justify-center gap-3">

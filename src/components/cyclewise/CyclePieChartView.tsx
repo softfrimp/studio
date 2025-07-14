@@ -78,7 +78,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
 
   if (pieData.length === 0) {
     return (
-      <Card className="shadow-lg">
+      <Card className="glass shadow-lg">
         <CardHeader>
           <CardTitle className="font-headline text-xl">Cycle Overview</CardTitle>
         </CardHeader>
@@ -90,7 +90,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
   }
 
   return (
-    <Card className="shadow-lg">
+    <Card className="glass shadow-lg">
       <CardHeader>
         <CardTitle className="font-headline text-xl">Cycle Overview</CardTitle>
         <CardDescription>Estimated {totalCycleLength}-day cycle breakdown.</CardDescription>

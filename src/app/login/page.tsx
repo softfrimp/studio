@@ -57,8 +57,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md shadow-2xl">
+    <div className="flex min-h-screen items-center justify-center bg-background bg-hero-pattern p-4">
+      <Card className="w-full max-w-md glass">
         <CardHeader className="text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
                 <Droplets className="h-8 w-8 text-primary" />
