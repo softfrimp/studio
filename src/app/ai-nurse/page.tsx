@@ -18,7 +18,6 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { AiNurseChat } from '@/components/cyclewise/AiNurseChat';
 
 export default function AiNursePage() {
   const { user, loading } = useAuth();
@@ -89,8 +88,13 @@ export default function AiNursePage() {
         </Sidebar>
         <SidebarInset>
           <Header />
-          <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-            <AiNurseChat />
+          <main className="flex-grow flex flex-col">
+            <iframe
+                src="https://share.imagica.ai/?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8"
+                className="w-full h-full flex-grow border-0"
+                title="AI Nurse"
+                allow="camera; microphone"
+            ></iframe>
           </main>
         </SidebarInset>
       </div>
