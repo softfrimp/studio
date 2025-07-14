@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { format, parseISO } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gamepad2, LayoutDashboard, Loader2 } from 'lucide-react';
+import { Gamepad2, LayoutDashboard, Loader2, Droplets } from 'lucide-react';
 import Link from 'next/link';
 
 import { Header } from '@/components/cyclewise/Header';
@@ -24,6 +24,7 @@ import {
   SidebarProvider,
   Sidebar,
   SidebarContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -111,26 +112,34 @@ export default function CycleWisePage() {
     <SidebarProvider>
       <div className="flex min-h-screen">
         <Sidebar>
-            <SidebarContent>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild isActive>
-                            <Link href="/">
-                                <LayoutDashboard />
-                                Dashboard
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                            <Link href="/games">
-                                <Gamepad2 />
-                                Games
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarContent>
+          <SidebarContent>
+            <SidebarHeader>
+              <div className="flex items-center gap-2">
+                <Droplets className="h-7 w-7 text-primary" />
+                <h1 className="text-2xl font-headline font-bold text-primary-foreground">
+                  CycleWise
+                </h1>
+              </div>
+            </SidebarHeader>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive>
+                  <Link href="/">
+                    <LayoutDashboard />
+                    Dashboard
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/games">
+                    <Gamepad2 />
+                    Games
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
         </Sidebar>
         <SidebarInset>
         <Header />

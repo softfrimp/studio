@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Gamepad2, LayoutDashboard, Loader2 } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2 } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
   SidebarProvider,
   Sidebar,
   SidebarContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -42,6 +43,14 @@ export default function GamesPage() {
     <div className="flex min-h-screen">
       <Sidebar>
           <SidebarContent>
+              <SidebarHeader>
+                 <div className="flex items-center gap-2">
+                  <Droplets className="h-7 w-7 text-primary" />
+                  <h1 className="text-2xl font-headline font-bold text-primary-foreground">
+                    CycleWise
+                  </h1>
+                </div>
+              </SidebarHeader>
               <SidebarMenu>
                   <SidebarMenuItem>
                       <SidebarMenuButton asChild>

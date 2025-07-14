@@ -46,9 +46,9 @@ body {
     --chart-5: 325 89% 80%; /* #F99FD4 */
 
     /* Sidebar Colors */
-    --sidebar-background: 325 100% 96%;
-    --sidebar-foreground: 325 40% 25%;
-    --sidebar-border: 325 85% 88%;
+    --sidebar-background: 325 92% 92%;
+    --sidebar-foreground: 325 40% 30%;
+    --sidebar-border: 325 85% 85%;
     --sidebar-accent: 325 71% 60%;
     --sidebar-accent-foreground: 325 100% 98%;
     --sidebar-ring: 325 71% 60%;
@@ -91,7 +91,7 @@ body {
     --chart-5: 325 89% 80%; /* #F99FD4 */
 
     /* Sidebar Colors */
-    --sidebar-background: 325 28% 14%;
+    --sidebar-background: 325 25% 15%;
     --sidebar-foreground: 325 90% 90%;
     --sidebar-border: 325 20% 22%;
     --sidebar-accent: 325 71% 60%;
