@@ -1,11 +1,10 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, BrainCircuit } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, Home } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -18,10 +17,10 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Quiz } from '@/components/cyclewise/Quiz';
 import { Button } from '@/components/ui/button';
 
-export default function GamesPage() {
+export default function QuizPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -75,32 +74,7 @@ export default function GamesPage() {
       <SidebarInset>
       <Header />
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="glass">
-                <CardHeader>
-                    <CardTitle className="font-headline text-xl flex items-center gap-2">
-                        <BrainCircuit className="h-6 w-6 text-accent" />
-                        Cycle Savvy Quiz
-                    </CardTitle>
-                    <CardDescription>
-                        Test your knowledge about menstrual health.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex justify-center items-center mb-4">
-                        <img src="https://placehold.co/400x250.png" alt="Quiz placeholder" data-ai-hint="brain knowledge" className="rounded-lg shadow-lg" />
-                    </div>
-                     <p className="text-muted-foreground mb-4">
-                        Think you're a period pro? Take our quiz to find out!
-                    </p>
-                    <Button asChild className="w-full">
-                        <Link href="/games/quiz">
-                            Play Now
-                        </Link>
-                    </Button>
-                </CardContent>
-            </Card>
-        </div>
+        <Quiz />
       </main>
       </SidebarInset>
       </div>
