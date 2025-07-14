@@ -51,22 +51,22 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     
     const phaseOrder: PhaseName[] = ['menstruation', 'possibleToConceive1', 'ovulation', 'possibleToConceive2', 'unlikelyToConceive'];
 
-    phaseOrder.forEach(phaseName => {
+    phaseOrder.forEach((phaseName, index) => {
         const phase = prediction.phases[phaseName];
         if (phase) {
             const phaseInfo = getPhaseInfo(phaseName);
             const days = getDays(phase.start, phase.end);
             if (days > 0) {
-              const existingEntry = data.find(d => d.name === phaseInfo.name);
-              if (existingEntry) {
-                existingEntry.value += days;
-              } else {
-                data.push({
-                    name: phaseInfo.name,
-                    value: days,
-                    fill: `hsl(var(${phaseInfo.chartColor}))`,
-                });
-              }
+              // Use a unique name for each distinct phase to prevent grouping
+              let uniqueName = phaseInfo.name;
+              if (phaseName === 'possibleToConceive1') uniqueName = `Fertile Window (Follicular)`;
+              if (phaseName === 'possibleToConceive2') uniqueName = `Fertile Window (Luteal)`;
+
+              data.push({
+                  name: uniqueName,
+                  value: days,
+                  fill: `hsl(var(${phaseInfo.chartColor}))`,
+              });
             }
         }
     });
@@ -88,6 +88,10 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
       </Card>
     );
   }
+  
+  const pieCells = pieData.map((entry, index) => (
+    <Cell key={`cell-${index}`} fill={entry.fill} stroke={entry.fill} />
+  ));
 
   return (
     <Card className="glass shadow-lg">
@@ -110,9 +114,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
               label={renderCustomizedLabel}
               paddingAngle={2}
             >
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.fill} stroke={entry.fill} />
-              ))}
+              {pieCells}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
             <Legend 

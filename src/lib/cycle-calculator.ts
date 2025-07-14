@@ -52,7 +52,7 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
   const { startDate, cycleLength } = input;
   const lastPeriodDate = new Date(startDate.replace(/-/g, '/')); // Use / to avoid timezone issues
 
-  const formatDate = (date: Date) => format(date, 'yyyy-MM-dd');
+  const formatDateString = (date: Date) => format(date, 'yyyy-MM-dd');
 
   // Day 1-7: Menstruation (7 days)
   const menstruationStart = lastPeriodDate;
@@ -83,15 +83,15 @@ export function calculateCyclePhases(input: CalculationInput): CyclePrediction {
   return {
     cycleLength,
     phases: {
-      menstruation: { start: formatDate(menstruationStart), end: formatDate(menstruationEnd) },
-      possibleToConceive1: { start: formatDate(possibleToConceive1Start), end: formatDate(possibleToConceive1End) },
-      ovulation: { start: formatDate(ovulationDayStart), end: formatDate(ovulationDayEnd) },
-      possibleToConceive2: { start: formatDate(possibleToConceive2Start), end: formatDate(possibleToConceive2End) },
-      unlikelyToConceive: { start: formatDate(unlikelyToConceiveStart), end: formatDate(unlikelyToConceiveEnd) },
+      menstruation: { start: formatDateString(menstruationStart), end: formatDateString(menstruationEnd) },
+      possibleToConceive1: { start: formatDateString(possibleToConceive1Start), end: formatDateString(possibleToConceive1End) },
+      ovulation: { start: formatDateString(ovulationDayStart), end: formatDateString(ovulationDayEnd) },
+      possibleToConceive2: { start: formatDateString(possibleToConceive2Start), end: formatDateString(possibleToConceive2End) },
+      unlikelyToConceive: { start: formatDateString(unlikelyToConceiveStart), end: formatDateString(unlikelyToConceiveEnd) },
     },
     nextMenstruationWindow: {
-        start: formatDate(nextPeriodStart),
-        end: formatDate(nextPeriodEnd)
+        start: formatDateString(nextPeriodStart),
+        end: formatDateString(nextPeriodEnd)
     },
   };
 }
