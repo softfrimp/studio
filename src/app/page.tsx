@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, addDays, subDays } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -11,7 +11,6 @@ import { CycleCalendarView } from '@/components/cyclewise/CycleCalendarView';
 import { CyclePieChartView } from '@/components/cyclewise/CyclePieChartView';
 import { InspirationalQuotesDisplay } from '@/components/cyclewise/InspirationalQuotesDisplay';
 import { FunFactsDisplay } from '@/components/cyclewise/FunFactsDisplay';
-import { SymptomLogger } from '@/components/cyclewise/SymptomLogger';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,12 +18,10 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
 
 
-import { predictCycle } from '@/ai/flows/predict-cycle';
-import { personalizeCyclePredictions } from '@/ai/flows/personalize-cycle-predictions';
-
-import type { CyclePrediction, PersonalizedCyclePrediction } from '@/lib/types';
+import type { CyclePrediction } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { calculateCyclePhases } from '@/lib/cycle-calculator';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -43,12 +40,8 @@ const cardVariants = {
 export default function CycleWisePage() {
   const [initialPeriodDate, setInitialPeriodDate] = useState<Date | null>(null);
   const [currentCycleLength, setCurrentCycleLength] = useState<number>(28);
-  const [basicPrediction, setBasicPrediction] = useState<CyclePrediction | null>(null);
-  const [personalizedPrediction, setPersonalizedPrediction] = useState<PersonalizedCyclePrediction | null>(null);
-  const [isLoading, setIsLoading] = useState({
-    basic: false,
-    personalized: false,
-  });
+  const [prediction, setPrediction] = useState<CyclePrediction | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { toast } = useToast();
   const { user, loading, updateInitialPeriod } = useAuth();
@@ -70,50 +63,32 @@ export default function CycleWisePage() {
 
 
   const handleInitialPeriodSubmit = async (date: Date, length: number, fromEffect = false) => {
-    if (!fromEffect) setIsLoading(prev => ({ ...prev, basic: true }));
+    if (!fromEffect) setIsLoading(true);
     setInitialPeriodDate(date);
     setCurrentCycleLength(length);
     if(user) updateInitialPeriod(date, length);
+    
     try {
-      const predictionData = await predictCycle({ 
+      // Use the manual calculation function
+      const predictionData = calculateCyclePhases({
         startDate: format(date, 'yyyy-MM-dd'),
-        cycleLength: length 
+        cycleLength: length
       });
-      setBasicPrediction(predictionData);
-      setPersonalizedPrediction(null);
-      if (!fromEffect) toast({ title: 'Cycle Predicted', description: 'Basic cycle prediction is ready.' });
+      setPrediction(predictionData);
+
+      if (!fromEffect) toast({ title: 'Cycle Predicted', description: 'Your cycle prediction is ready.' });
     } catch (error) {
       console.error("Error in handleInitialPeriodSubmit:", error);
       toast({ title: 'Prediction Error', description: 'Failed to predict cycle.', variant: 'destructive' });
     } finally {
-      if (!fromEffect) setIsLoading(prev => ({ ...prev, basic: false }));
-    }
-  };
-
-  const handleSymptomLogSubmit = async (symptoms: string, mood: string, cycleHistory: string, currentInitialDate: string) => {
-    if (!initialPeriodDate) {
-      toast({ title: 'Initial Date Needed', description: 'Please set your initial period date first.', variant: 'destructive' });
-      return;
-    }
-    setIsLoading(prev => ({ ...prev, personalized: true }));
-    try {
-      const personalizedData = await personalizeCyclePredictions({
-        symptoms,
-        mood,
-        cycleHistory, 
-        initialPeriodDate: currentInitialDate, 
-      });
-      setPersonalizedPrediction(personalizedData);
-      toast({ title: 'Predictions Refined', description: 'Your cycle predictions have been personalized.' });
-    } catch (error) {
-      console.error("Error in handleSymptomLogSubmit:", error);
-      toast({ title: 'Personalization Error', description: 'Failed to personalize predictions.', variant: 'destructive' });
-    } finally {
-      setIsLoading(prev => ({ ...prev, personalized: false }));
+       if (!fromEffect) {
+         // Add a small delay to make the loading feel more substantial
+         setTimeout(() => setIsLoading(false), 500);
+       }
     }
   };
   
-  const noPredictionsAvailable = !basicPrediction && !personalizedPrediction;
+  const noPredictionsAvailable = !prediction;
 
   if (loading || !user) {
     return (
@@ -142,16 +117,15 @@ export default function CycleWisePage() {
                   onSubmit={(date, length) => handleInitialPeriodSubmit(date, length)}
                   initialDate={initialPeriodDate}
                   cycleLength={currentCycleLength}
-                  isLoading={isLoading.basic}
+                  isLoading={isLoading}
                 />
             </motion.div>
              <motion.div variants={cardVariants} custom={1}>
-                <SymptomLogger 
-                  onSubmit={handleSymptomLogSubmit} 
-                  initialPeriodDate={initialPeriodDate}
-                  isLoading={isLoading.personalized}
-                />
-             </motion.div>
+                <InspirationalQuotesDisplay />
+            </motion.div>
+             <motion.div variants={cardVariants} custom={2}>
+                <FunFactsDisplay />
+            </motion.div>
           </motion.section>
 
           <motion.section 
@@ -170,7 +144,7 @@ export default function CycleWisePage() {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5 }}
                     variants={cardVariants} 
-                    custom={2}
+                    custom={3}
                  >
                     {noPredictionsAvailable ? (
                         <Card className="glass">
@@ -180,8 +154,7 @@ export default function CycleWisePage() {
                             <CardContent>
                                 <p className="text-muted-foreground">
                                     Begin by entering your last period's start date using the form on the left. 
-                                    This will help CycleWise predict your upcoming cycle phases. You can then log symptoms 
-                                    for more personalized insights.
+                                    This will help CycleWise predict your upcoming cycle phases.
                                 </p>
                                 <img src="https://placehold.co/600x300.png" alt="Placeholder for cycle tracking" data-ai-hint="wellness calendar" className="mt-4 rounded-md w-full h-auto object-cover"/>
                             </CardContent>
@@ -194,28 +167,19 @@ export default function CycleWisePage() {
                         </TabsList>
                         <TabsContent value="calendar">
                         <CycleCalendarView 
-                            basicPrediction={basicPrediction} 
-                            personalizedPrediction={personalizedPrediction}
+                            prediction={prediction} 
                             initialDate={initialPeriodDate}
                         />
                         </TabsContent>
                         <TabsContent value="piechart">
                         <CyclePieChartView 
-                            basicPrediction={basicPrediction} 
-                            personalizedPrediction={personalizedPrediction}
+                           prediction={prediction}
                         />
                         </TabsContent>
                     </Tabs>
                     )}
                  </motion.div>
             </AnimatePresence>
-
-            <motion.div variants={cardVariants} custom={3}>
-                <InspirationalQuotesDisplay />
-            </motion.div>
-             <motion.div variants={cardVariants} custom={4}>
-                <FunFactsDisplay />
-            </motion.div>
           </motion.section>
         </div>
       </main>

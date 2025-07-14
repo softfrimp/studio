@@ -1,8 +1,12 @@
-import type { PredictCycleOutput } from '@/ai/flows/predict-cycle';
-import type { PersonalizeCyclePredictionsOutput } from '@/ai/flows/personalize-cycle-predictions';
-
-export type CyclePrediction = PredictCycleOutput;
-export type PersonalizedCyclePrediction = PersonalizeCyclePredictionsOutput;
+export interface CyclePrediction {
+  predictedMenstruationStartDate: string;
+  safePeriodStart: string;
+  safePeriodEnd: string;
+  ovulationStartDate: string;
+  ovulationEndDate: string;
+  dangerousPeriodStart: string;
+  dangerousPeriodEnd: string;
+}
 
 export interface CyclePhase {
   name: string;
