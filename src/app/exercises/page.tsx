@@ -19,6 +19,7 @@ import {
   SidebarInset,
 } from '@/components/ui/sidebar';
 import { BreathingExercise } from '@/components/cyclewise/BreathingExercise';
+import { CrampReliefExercises } from '@/components/cyclewise/CrampReliefExercises';
 
 export default function ExercisesPage() {
   const { user, loading } = useAuth();
@@ -81,8 +82,11 @@ export default function ExercisesPage() {
       </Sidebar>
       <SidebarInset>
       <Header />
-      <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8 flex items-center justify-center">
-        <BreathingExercise />
+      <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <BreathingExercise />
+            <CrampReliefExercises />
+        </div>
       </main>
       </SidebarInset>
       </div>
