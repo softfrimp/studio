@@ -39,9 +39,7 @@ export default function GamesPage() {
 
   return (
     <SidebarProvider>
-    <div className="flex flex-col min-h-screen">
-    <Header />
-    <div className="flex flex-1">
+    <div className="flex min-h-screen">
       <Sidebar>
           <SidebarContent>
               <SidebarMenu>
@@ -65,6 +63,7 @@ export default function GamesPage() {
           </SidebarContent>
       </Sidebar>
       <SidebarInset>
+      <Header />
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
         <Card className="glass">
             <CardHeader>
@@ -81,7 +80,6 @@ export default function GamesPage() {
         </Card>
       </main>
       </SidebarInset>
-      </div>
       </div>
   </SidebarProvider>
   );

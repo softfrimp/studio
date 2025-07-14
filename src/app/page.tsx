@@ -109,9 +109,7 @@ export default function CycleWisePage() {
 
   return (
     <SidebarProvider>
-      <div className="flex flex-col min-h-screen">
-      <Header />
-      <div className="flex flex-1">
+      <div className="flex min-h-screen">
         <Sidebar>
             <SidebarContent>
                 <SidebarMenu>
@@ -135,6 +133,7 @@ export default function CycleWisePage() {
             </SidebarContent>
         </Sidebar>
         <SidebarInset>
+        <Header />
         <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
@@ -224,7 +223,6 @@ export default function CycleWisePage() {
           </div>
         </main>
         </SidebarInset>
-        </div>
         </div>
     </SidebarProvider>
   );
