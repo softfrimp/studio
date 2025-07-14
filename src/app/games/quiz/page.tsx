@@ -3,9 +3,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, Home, HeartPulse, Stethoscope } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -19,7 +19,6 @@ import {
   SidebarInset,
 } from '@/components/ui/sidebar';
 import { Quiz } from '@/components/cyclewise/Quiz';
-import { Button } from '@/components/ui/button';
 
 export default function QuizPage() {
   const { user, loading } = useAuth();
