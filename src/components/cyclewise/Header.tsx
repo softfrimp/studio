@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Droplets, LogOut } from 'lucide-react';
@@ -21,13 +22,13 @@ export function Header() {
         <div className="flex items-center gap-2">
           <SidebarTrigger />
           <Droplets className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
-          <h1 className="text-2xl sm:text-3xl font-headline font-bold text-primary-foreground">
+          <h1 className="text-2xl sm:text-3xl font-headline font-bold text-foreground">
             CycleWise
           </h1>
         </div>
         {user && (
           <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Log out">
-            <LogOut className="h-5 w-5 text-primary-foreground" />
+            <LogOut className="h-5 w-5 text-foreground" />
           </Button>
         )}
       </div>
