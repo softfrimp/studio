@@ -28,7 +28,7 @@ import { Button } from '@/components/ui/button';
 
 export default function CycleWisePage() {
   const [initialPeriodDate, setInitialPeriodDate] = useState<Date | null>(null);
-  const [currentCycleLength, setCurrentCycleLength] = useState<number>(28); // Store the cycle length
+  const [currentCycleLength, setCurrentCycleLength] = useState<number>(28);
   const [basicPrediction, setBasicPrediction] = useState<CyclePrediction | null>(null);
   const [personalizedPrediction, setPersonalizedPrediction] = useState<PersonalizedCyclePrediction | null>(null);
   const [aiVoiceResponse, setAiVoiceResponse] = useState<AiVoiceAssistantOutput | null>(null);
@@ -39,13 +39,21 @@ export default function CycleWisePage() {
   });
 
   const { toast } = useToast();
-  const { user, loading } = useAuth();
+  const { user, loading, updateInitialPeriod } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    // If not loading and no user, redirect to login
     if (!loading && !user) {
       router.push('/login');
+    } else if (user) {
+      // If user data is available, pre-fill the form/state
+      if (user.lastPeriodDate) {
+        const date = parseISO(user.lastPeriodDate);
+        setInitialPeriodDate(date);
+        setCurrentCycleLength(user.cycleLength || 28);
+        // Automatically trigger prediction on load if data exists
+        handleInitialPeriodSubmit(date, user.cycleLength || 28);
+      }
     }
   }, [user, loading, router]);
 
@@ -53,15 +61,16 @@ export default function CycleWisePage() {
   const handleInitialPeriodSubmit = async (date: Date, length: number) => {
     setIsLoading(prev => ({ ...prev, basic: true }));
     setInitialPeriodDate(date);
-    setCurrentCycleLength(length); // Save the cycle length
+    setCurrentCycleLength(length);
+    updateInitialPeriod(date, length); // Update user context
     try {
       const predictionData = await predictCycle({ 
         startDate: format(date, 'yyyy-MM-dd'),
         cycleLength: length 
       });
       setBasicPrediction(predictionData);
-      setPersonalizedPrediction(null); // Reset personalized if basic is updated
-      setAiVoiceResponse(null); // Reset AI response
+      setPersonalizedPrediction(null);
+      setAiVoiceResponse(null); 
       toast({ title: 'Cycle Predicted', description: 'Basic cycle prediction is ready.' });
     } catch (error) {
       console.error("Error in handleInitialPeriodSubmit:", error);
@@ -81,11 +90,11 @@ export default function CycleWisePage() {
       const personalizedData = await personalizeCyclePredictions({
         symptoms,
         mood,
-        cycleHistory, // This is a simplified string representation
+        cycleHistory, 
         initialPeriodDate: currentInitialDate, 
       });
       setPersonalizedPrediction(personalizedData);
-      setAiVoiceResponse(null); // Reset AI response if personalized prediction is made
+      setAiVoiceResponse(null);
       toast({ title: 'Predictions Refined', description: 'Your cycle predictions have been personalized.' });
     } catch (error) {
       console.error("Error in handleSymptomLogSubmit:", error);
@@ -103,15 +112,8 @@ export default function CycleWisePage() {
         cycleStartDate: cycleStartDate || (initialPeriodDate ? format(initialPeriodDate, 'yyyy-MM-dd') : undefined)
       });
       setAiVoiceResponse(response);
-      // If AI provides visualization text, it will be passed to chart/calendar components
-      // If AI provides other direct responses, they can be shown in AiVoiceAssistantUI or here
       if (response.responseText || response.comfortingMessage) {
          toast({ title: 'AI Assistant', description: response.responseText || response.comfortingMessage || "Responded." });
-      }
-      // If AI visualization implies new data, clear other predictions to give AI priority
-      if(response.cycleVisualization) {
-        // setBasicPrediction(null); // Optional: uncomment if AI viz should always override
-        // setPersonalizedPrediction(null); // Optional: uncomment
       }
     } catch (error) {
       console.error("Error in handleAiVoiceCommand:", error);
@@ -133,9 +135,12 @@ export default function CycleWisePage() {
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* Left Column: Inputs & Actions */}
           <section className="lg:col-span-1 flex flex-col gap-6">
-            <InitialPeriodInputForm onSubmit={handleInitialPeriodSubmit} />
+            <InitialPeriodInputForm 
+              onSubmit={handleInitialPeriodSubmit} 
+              initialDate={initialPeriodDate}
+              cycleLength={currentCycleLength}
+            />
             <SymptomLogger 
               onSubmit={handleSymptomLogSubmit} 
               initialPeriodDate={initialPeriodDate} 
@@ -146,7 +151,6 @@ export default function CycleWisePage() {
             />
           </section>
 
-          {/* Right Column: Visualizations & Info */}
           <section className="lg:col-span-2 flex flex-col gap-6">
             {noPredictionsAvailable ? (
                  <Card className="shadow-lg">

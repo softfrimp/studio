@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -10,7 +10,6 @@ import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -30,27 +29,35 @@ const FormSchema = z.object({
 
 type InitialPeriodInputFormProps = {
   onSubmit: (date: Date, length: number) => Promise<void>;
+  initialDate?: Date | null;
+  cycleLength?: number;
 };
 
-export function InitialPeriodInputForm({ onSubmit }: InitialPeriodInputFormProps) {
+export function InitialPeriodInputForm({ onSubmit, initialDate, cycleLength }: InitialPeriodInputFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      cycleLength: 28,
+      cycleLength: cycleLength || 28,
+      initialDate: initialDate || undefined
     },
   });
+
+  useEffect(() => {
+    // When the props from the parent component update, reset the form
+    form.reset({
+      initialDate: initialDate || undefined,
+      cycleLength: cycleLength || 28,
+    });
+  }, [initialDate, cycleLength, form]);
+
 
   async function handleSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     try {
       await onSubmit(data.initialDate, data.cycleLength);
-      toast({
-        title: 'Prediction Ready!',
-        description: 'Your cycle prediction has been generated.',
-      });
     } catch (error) {
       console.error('Error predicting cycle:', error);
       toast({
