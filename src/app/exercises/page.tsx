@@ -3,9 +3,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, Home, HeartPulse } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -18,10 +18,9 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { Quiz } from '@/components/cyclewise/Quiz';
-import { Button } from '@/components/ui/button';
+import { BreathingExercise } from '@/components/cyclewise/BreathingExercise';
 
-export default function QuizPage() {
+export default function ExercisesPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -62,7 +61,7 @@ export default function QuizPage() {
                       </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive>
+                      <SidebarMenuButton asChild>
                           <Link href="/games">
                               <Gamepad2 />
                               Games
@@ -70,7 +69,7 @@ export default function QuizPage() {
                       </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
+                      <SidebarMenuButton asChild isActive>
                           <Link href="/exercises">
                               <HeartPulse />
                               Exercises
@@ -82,8 +81,8 @@ export default function QuizPage() {
       </Sidebar>
       <SidebarInset>
       <Header />
-      <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-        <Quiz />
+      <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8 flex items-center justify-center">
+        <BreathingExercise />
       </main>
       </SidebarInset>
       </div>
