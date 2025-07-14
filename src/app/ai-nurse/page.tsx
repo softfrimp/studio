@@ -89,10 +89,10 @@ export default function AiNursePage() {
         <SidebarInset>
           <div className="flex flex-col h-screen">
             <Header />
-            <main className="flex-grow flex flex-col">
+            <main className="flex-grow">
               <iframe
                   src="https://share.imagica.ai/?q=9b6ee42c-5ff2-422a-8cda-6e503ef2aba8"
-                  className="w-full h-full flex-grow border-0"
+                  className="w-full h-full border-0"
                   title="AI Nurse"
                   allow="camera; microphone"
               ></iframe>
