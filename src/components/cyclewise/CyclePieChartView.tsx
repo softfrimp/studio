@@ -26,6 +26,20 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name, value }: any) => {
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+        <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-xs font-bold fill-primary-foreground">
+            {`${name.replace(' (Follicular)','').replace(' (Luteal)','')} (${value}d)`}
+        </text>
+    );
+};
+
+
 export function CyclePieChartView({ prediction }: { prediction: CyclePrediction | null; }) {
   const [pieData, setPieData] = useState<PieChartDataPoint[]>([]);
   const [totalCycleLength, setTotalCycleLength] = useState<number>(0);
@@ -35,7 +49,6 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
     
     const data: PieChartDataPoint[] = [];
     
-    // This order determines the arrangement in the pie chart.
     const phaseOrder: PhaseName[] = ['menstruation', 'possibleToConceive1', 'ovulation', 'possibleToConceive2', 'unlikelyToConceive'];
 
     phaseOrder.forEach(phaseName => {
@@ -44,11 +57,16 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
             const phaseInfo = getPhaseInfo(phaseName);
             const days = getDays(phase.start, phase.end);
             if (days > 0) {
-              data.push({
-                  name: phaseInfo.name,
-                  value: days,
-                  fill: `hsl(var(${phaseInfo.chartColor}))`,
-              });
+              const existingEntry = data.find(d => d.name === phaseInfo.name);
+              if (existingEntry) {
+                existingEntry.value += days;
+              } else {
+                data.push({
+                    name: phaseInfo.name,
+                    value: days,
+                    fill: `hsl(var(${phaseInfo.chartColor}))`,
+                });
+              }
             }
         }
     });
@@ -89,7 +107,7 @@ export function CyclePieChartView({ prediction }: { prediction: CyclePrediction 
               innerRadius={50}
               fill="#8884d8"
               dataKey="value"
-              label={({ name, value }) => `${name.replace(' (Follicular)','').replace(' (Luteal)','')} (${value}d)`}
+              label={renderCustomizedLabel}
               paddingAngle={2}
             >
               {pieData.map((entry, index) => (
