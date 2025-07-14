@@ -8,17 +8,17 @@ body {
 
 @layer base {
   :root {
-    --background: 325 100% 97%; /* Lighter version of #FFB3DE */
-    --foreground: 325 50% 20%; /* Dark, desaturated pink for text */
+    --background: 325 100% 95%; 
+    --foreground: 325 50% 20%; 
 
-    --card: 325 100% 95%; /* #FFB3DE adjusted */
+    --card: 325 100% 95%; 
     --card-foreground: 325 50% 20%;
 
     --popover: 325 100% 95%;
     --popover-foreground: 325 50% 20%;
 
     --primary: 325 71% 60%; /* #E24FAC */
-    --primary-foreground: 325 100% 98%; /* Almost white for contrast */
+    --primary-foreground: 325 100% 98%; 
 
     --secondary: 325 83% 75%; /* #F38BCA */
     --secondary-foreground: 325 50% 20%;
