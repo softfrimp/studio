@@ -25,6 +25,13 @@ const isSolvable = (tiles: number[]): boolean => {
             }
         }
     }
+    const emptyRow = Math.floor(tiles.indexOf(EMPTY_TILE) / GRID_SIZE);
+    
+    // For a 4x4 grid, if the grid width is even, we need to consider the row of the empty space.
+    if (GRID_SIZE % 2 === 0) {
+        return (inversions + emptyRow) % 2 !== 0;
+    }
+    // For an odd grid, only the number of inversions matters.
     return inversions % 2 === 0;
 };
 
@@ -39,11 +46,15 @@ const shuffleTiles = (): Tiles => {
 };
 
 export function SlidingPuzzle() {
-    const [tiles, setTiles] = useState<Tiles>(shuffleTiles);
+    const [tiles, setTiles] = useState<Tiles>([]);
     const [moves, setMoves] = useState(0);
     const [time, setTime] = useState(0);
     const [isSolved, setIsSolved] = useState(false);
     const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        setTiles(shuffleTiles());
+    }, []);
 
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
@@ -67,17 +78,21 @@ export function SlidingPuzzle() {
     }, []);
 
     const moveTile = useCallback((tileIndex: number) => {
-        if (isSolved) return;
+        if (isSolved || tiles.length === 0) return;
         if (!isActive) setIsActive(true);
 
         const emptyIndex = tiles.indexOf(EMPTY_TILE);
+        if (emptyIndex === -1) return;
+
         const tile = tiles[tileIndex];
         if (tile === EMPTY_TILE) return;
 
         const { row, col } = { row: Math.floor(tileIndex / GRID_SIZE), col: tileIndex % GRID_SIZE };
         const { emptyRow, emptyCol } = { row: Math.floor(emptyIndex / GRID_SIZE), col: emptyIndex % GRID_SIZE };
 
-        const isAdjacent = Math.abs(row - emptyRow) + Math.abs(col - emptyCol) === 1;
+        // Check for adjacency (not diagonal)
+        const isAdjacent = (row === emptyRow && Math.abs(col - emptyCol) === 1) ||
+                           (col === emptyCol && Math.abs(row - emptyRow) === 1);
 
         if (isAdjacent) {
             const newTiles = [...tiles];
@@ -105,6 +120,10 @@ export function SlidingPuzzle() {
         const secs = seconds % 60;
         return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
+
+    if (tiles.length === 0) {
+        return null; // Or a loading state
+    }
 
     return (
         <Card className="glass w-full max-w-md mx-auto text-center">
