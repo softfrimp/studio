@@ -156,7 +156,7 @@ export const STATIC_QUIZ_QUESTIONS: QuizQuestion[] = [
     questionText: "How can smoking affect menstruation?",
     options: ["It regulates the cycle", "It makes the flow healthier", "It can lead to irregular periods", "It has no effect"],
     correctAnswerIndex: 2,
-    explanation: "Smoking can affect hormone levels, potentially leading to shorter, more irregular menstrual cycles."
+    explanation: "Smoking can affect hormone levels, a a potentially leading to shorter, more irregular menstrual cycles."
   },
   {
     questionText: "Why might someone miss their period besides pregnancy?",
@@ -734,4 +734,27 @@ export const STATIC_QUIZ_QUESTIONS: QuizQuestion[] = [
     correctAnswerIndex: 1,
     explanation: "Applying warmth to the abdomen helps to relax the contracting uterine muscles, thereby reducing the pain of cramps."
   }
+];
+
+export type WordGuess = {
+  word: string;
+  hint: string;
+};
+
+export const WORD_GUESS_LIST: WordGuess[] = [
+  { word: "ESTROGEN", hint: "A key female hormone that regulates the menstrual cycle." },
+  { word: "OVULATION", hint: "The release of an egg from the ovary." },
+  { word: "UTERUS", hint: "The organ where a fetus grows." },
+  { word: "CRAMPS", hint: "A common symptom of menstruation." },
+  { word: "HORMONE", hint: "A chemical messenger in the body." },
+  { word: "FOLLICLE", hint: "A small sac in the ovary that contains a developing egg." },
+  { word: "ANEMIA", hint: "A condition often linked to heavy periods and iron deficiency." },
+  { word: "FERTILE", hint: "The time in the cycle when pregnancy is possible." },
+  { word: "LUTEAL", hint: "The phase of the cycle after ovulation." },
+  { word: "HYDRATE", hint: "An important practice to reduce bloating." },
+  { word: "CALCIUM", hint: "A mineral that can help with PMS symptoms." },
+  { word: "WELLNESS", hint: "An active process of becoming aware of and making choices toward a healthy life." },
+  { word: "MEDITATE", hint: "A practice to calm the mind and reduce stress." },
+  { word: "VITAMIN", hint: "An organic compound and a vital nutrient." },
+  { word: "NUTRITION", hint: "The process of providing or obtaining the food necessary for health." },
 ];
