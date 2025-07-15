@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, BrainCircuit, HeartPulse, Stethoscope } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, BrainCircuit, HeartPulse, Stethoscope, LayoutGrid } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -115,6 +115,30 @@ export default function GamesPage() {
                     </p>
                     <Button asChild className="w-full">
                         <Link href="/games/quiz">
+                            Play Now
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
+            <Card className="glass">
+                <CardHeader>
+                    <CardTitle className="font-headline text-xl flex items-center gap-2">
+                        <LayoutGrid className="h-6 w-6 text-accent" />
+                        Sliding Puzzle
+                    </CardTitle>
+                    <CardDescription>
+                        Unscramble the numbers to solve the puzzle.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                     <div className="flex justify-center items-center mb-4 p-6 bg-accent/10 rounded-lg">
+                        <LayoutGrid className="w-24 h-24 text-primary" />
+                    </div>
+                     <p className="text-muted-foreground mb-4">
+                        A classic brain teaser to test your logic and speed.
+                    </p>
+                    <Button asChild className="w-full">
+                        <Link href="/games/sliding-puzzle">
                             Play Now
                         </Link>
                     </Button>
