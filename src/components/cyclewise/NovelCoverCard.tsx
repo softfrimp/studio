@@ -18,7 +18,7 @@ export function NovelCoverCard({ novel }: NovelCoverCardProps) {
       whileHover={{ y: -5, scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 300 }}
     >
-      <Link href={`/ovels/${novel.slug}`} passHref>
+      <Link href={`/novels/${novel.slug}`} passHref>
         <Card className="h-full flex flex-col glass overflow-hidden cursor-pointer group">
           <CardHeader className="p-0">
             <div className="relative aspect-[2/3] w-full">

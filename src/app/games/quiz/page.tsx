@@ -240,9 +240,9 @@ export default function QuizPage() {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="/ovels">
+                            <Link href="/novels">
                                 <BookOpen />
-                                Ovels
+                                Novels
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

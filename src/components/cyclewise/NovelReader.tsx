@@ -57,7 +57,7 @@ export function NovelReader({ novel }: { novel: Novel }) {
         </ScrollArea>
         <div className="p-4 border-t mt-auto">
             <Button variant="outline" asChild className="w-full">
-                <Link href="/ovels">
+                <Link href="/novels">
                     <ChevronLeft className="mr-2" />
                     Back to Library
                 </Link>

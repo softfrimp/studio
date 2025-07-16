@@ -18,9 +18,10 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { WordGuessGame } from '@/components/cyclewise/WordGuessGame';
+import { NOVELS } from '@/lib/novels';
+import { NovelCoverCard } from '@/components/cyclewise/NovelCoverCard';
 
-export default function WordGuessPage() {
+export default function NovelsHubPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -61,7 +62,7 @@ export default function WordGuessPage() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild isActive>
+                        <SidebarMenuButton asChild>
                             <Link href="/games">
                                 <Gamepad2 />
                                 Games
@@ -93,7 +94,7 @@ export default function WordGuessPage() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
+                        <SidebarMenuButton asChild isActive>
                             <Link href="/novels">
                                 <BookOpen />
                                 Novels
@@ -104,12 +105,16 @@ export default function WordGuessPage() {
             </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <div className="flex-grow flex flex-col h-screen">
-            <Header />
-            <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8 flex items-center justify-center">
-                 <WordGuessGame />
-            </main>
-          </div>
+          <Header />
+          <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
+            <h1 className="text-4xl font-headline font-bold mb-2">Novels</h1>
+            <p className="text-muted-foreground mb-8">A collection of stories to get lost in.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {NOVELS.map((novel) => (
+                <NovelCoverCard key={novel.slug} novel={novel} />
+              ))}
+            </div>
+          </main>
         </SidebarInset>
       </div>
     </SidebarProvider>
