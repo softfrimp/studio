@@ -30,48 +30,48 @@ export function NovelReader({ novel }: { novel: Novel }) {
     }
   }, [currentChapterIndex])
 
-  const ChapterSideNav = () => (
-    <div className="flex flex-col h-full">
-        <SheetHeader className="p-4 border-b">
-            <SheetTitle className="font-headline">{novel.title}</SheetTitle>
-        </SheetHeader>
-        <ScrollArea className="flex-grow">
-        <nav className="p-4">
-            <ul className="space-y-1">
-            {novel.chapters.map((chapter, index) => (
-                <li key={chapter.title}>
-                <Button
-                    variant="ghost"
-                    onClick={() => goToChapter(index)}
-                    className={cn(
-                        "w-full justify-start text-left h-auto py-2",
-                        index === currentChapterIndex && 'bg-primary/20 text-primary-foreground font-bold'
-                    )}
-                >
-                    {chapter.title}
-                </Button>
-                </li>
-            ))}
-            </ul>
-        </nav>
-        </ScrollArea>
-        <div className="p-4 border-t mt-auto">
-            <Button variant="outline" asChild className="w-full">
-                <Link href="/novels">
-                    <ChevronLeft className="mr-2" />
-                    Back to Library
-                </Link>
-            </Button>
-        </div>
-    </div>
+  const ChapterNavigation = () => (
+    <>
+      <ScrollArea className="flex-grow">
+      <nav className="p-4">
+          <ul className="space-y-1">
+          {novel.chapters.map((chapter, index) => (
+              <li key={chapter.title}>
+              <Button
+                  variant="ghost"
+                  onClick={() => goToChapter(index)}
+                  className={cn(
+                      "w-full justify-start text-left h-auto py-2",
+                      index === currentChapterIndex && 'bg-primary/20 text-primary-foreground font-bold'
+                  )}
+              >
+                  {chapter.title}
+              </Button>
+              </li>
+          ))}
+          </ul>
+      </nav>
+      </ScrollArea>
+      <div className="p-4 border-t mt-auto">
+          <Button variant="outline" asChild className="w-full">
+              <Link href="/novels">
+                  <ChevronLeft className="mr-2" />
+                  Back to Library
+              </Link>
+          </Button>
+      </div>
+    </>
   );
 
 
   return (
     <div className="flex h-[calc(100vh-var(--header-height,4rem))] bg-zinc-50 dark:bg-zinc-900">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block md:w-64 lg:w-72 border-r bg-background h-full">
-        <ChapterSideNav />
+      <aside className="hidden md:flex md:w-64 lg:w-72 border-r bg-background h-full flex-col">
+        <div className="p-4 border-b">
+            <h2 className="font-headline text-lg font-semibold">{novel.title}</h2>
+        </div>
+        <ChapterNavigation />
       </aside>
 
       {/* Main Content */}
@@ -85,8 +85,11 @@ export function NovelReader({ novel }: { novel: Novel }) {
                       <span className="sr-only">Open Chapters</span>
                   </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-72">
-                  <ChapterSideNav />
+              <SheetContent side="left" className="p-0 w-72 flex flex-col">
+                <SheetHeader className="p-4 border-b">
+                    <SheetTitle className="font-headline">{novel.title}</SheetTitle>
+                </SheetHeader>
+                <ChapterNavigation />
               </SheetContent>
           </Sheet>
           <div className="text-center flex-1">
