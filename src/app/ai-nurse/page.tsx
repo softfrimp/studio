@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Sparkles, Music } from 'lucide-react';
+import { BookOpen, Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Sparkles, Music } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import {
@@ -91,6 +91,14 @@ export default function AiNursePage() {
                             <Link href="/music">
                                 <Music />
                                 Music
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href="/ovels">
+                                <BookOpen />
+                                Ovels
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

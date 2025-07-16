@@ -1,6 +1,6 @@
 
-
 import type { PhaseName } from './cycle-calculator';
+import type { Novel } from './novels';
 
 export type PhaseData = { start: string; end: string };
 
@@ -45,3 +45,6 @@ export interface LoginData {
     email: string;
     password?: string;
 }
+
+// Novel Types
+export type { Novel };

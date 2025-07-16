@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { format, parseISO } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gamepad2, LayoutDashboard, Loader2, Droplets, HeartPulse, Stethoscope, Music } from 'lucide-react';
+import { Gamepad2, LayoutDashboard, Loader2, Droplets, HeartPulse, Stethoscope, Music, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
 import { Header } from '@/components/cyclewise/Header';
@@ -163,6 +163,14 @@ export default function CycleWisePage() {
                       </Link>
                   </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                    <Link href="/ovels">
+                        <BookOpen />
+                        Ovels
+                    </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
         </Sidebar>

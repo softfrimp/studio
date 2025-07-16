@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Music } from 'lucide-react';
+import { BookOpen, Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Music } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -93,6 +93,14 @@ export default function ExercisesPage() {
                           </Link>
                       </SidebarMenuButton>
                   </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                        <Link href="/ovels">
+                            <BookOpen />
+                            Ovels
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
           </SidebarContent>
       </Sidebar>

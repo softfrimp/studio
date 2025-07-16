@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { BookOpen, Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Music } from 'lucide-react';
-
-import { Header } from '@/components/cyclewise/Header';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Music, BookOpen } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -18,17 +16,27 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { SlidingPuzzle } from '@/components/cyclewise/SlidingPuzzle';
+import { Header } from '@/components/cyclewise/Header';
+import { NOVELS } from '@/lib/novels';
+import { NovelReader } from '@/components/cyclewise/NovelReader';
+import { notFound } from 'next/navigation';
 
-export default function SlidingPuzzlePage() {
+
+export default function NovelPage({ params }: { params: { slug: string } }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+
+  const novel = NOVELS.find((n) => n.slug === params.slug);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
+  
+  if (!novel) {
+    notFound();
+  }
 
   if (loading || !user) {
     return (
@@ -42,16 +50,16 @@ export default function SlidingPuzzlePage() {
     <SidebarProvider>
       <div className="flex min-h-screen">
         <Sidebar>
-            <SidebarContent>
-                <SidebarHeader>
-                   <div className="flex items-center gap-2">
-                    <Droplets className="h-7 w-7 text-primary" />
-                    <h1 className="text-2xl font-headline font-bold text-primary-foreground">
-                      CycleWise
-                    </h1>
-                  </div>
-                </SidebarHeader>
-                <SidebarMenu>
+          <SidebarContent>
+            <SidebarHeader>
+              <div className="flex items-center gap-2">
+                <Droplets className="h-7 w-7 text-primary" />
+                <h1 className="text-2xl font-headline font-bold text-primary-foreground">
+                  CycleWise
+                </h1>
+              </div>
+            </SidebarHeader>
+            <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <Link href="/">
@@ -61,7 +69,7 @@ export default function SlidingPuzzlePage() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild isActive>
+                        <SidebarMenuButton asChild>
                             <Link href="/games">
                                 <Gamepad2 />
                                 Games
@@ -93,7 +101,7 @@ export default function SlidingPuzzlePage() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
+                        <SidebarMenuButton asChild isActive>
                             <Link href="/ovels">
                                 <BookOpen />
                                 Ovels
@@ -101,15 +109,11 @@ export default function SlidingPuzzlePage() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
-            </SidebarContent>
+          </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <div className="flex-grow flex flex-col h-screen">
-            <Header />
-            <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8 flex items-center justify-center">
-                 <SlidingPuzzle />
-            </main>
-          </div>
+          <Header />
+          <NovelReader novel={novel} />
         </SidebarInset>
       </div>
     </SidebarProvider>
