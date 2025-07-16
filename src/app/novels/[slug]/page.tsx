@@ -22,11 +22,11 @@ import { NovelReader } from '@/components/cyclewise/NovelReader';
 import { notFound } from 'next/navigation';
 
 
-export default function NovelPage({ params }: { params: { slug: string } }) {
+export default function NovelPage({ params: { slug } }: { params: { slug: string } }) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  const novel = NOVELS.find((n) => n.slug === params.slug);
+  const novel = NOVELS.find((n) => n.slug === slug);
 
   useEffect(() => {
     if (!loading && !user) {
