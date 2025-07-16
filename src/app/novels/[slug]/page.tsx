@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams, notFound } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
@@ -19,14 +19,15 @@ import {
 import { Header } from '@/components/cyclewise/Header';
 import { NOVELS } from '@/lib/novels';
 import { NovelReader } from '@/components/cyclewise/NovelReader';
-import { notFound } from 'next/navigation';
 
 
-export default function NovelPage({ params }: { params: { slug: string } }) {
+export default function NovelPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const params = useParams();
+  const slug = params.slug as string;
 
-  const novel = NOVELS.find((n) => n.slug === params.slug);
+  const novel = NOVELS.find((n) => n.slug === slug);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -54,7 +55,7 @@ export default function NovelPage({ params }: { params: { slug: string } }) {
             <SidebarHeader>
               <div className="flex items-center gap-2">
                 <Droplets className="h-7 w-7 text-primary" />
-                <h1 className="text-2xl font-headline font-bold text-foreground">
+                <h1 className="text-2xl font-headline font-bold text-primary-foreground">
                   CycleWise
                 </h1>
               </div>
