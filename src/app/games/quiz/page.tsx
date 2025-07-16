@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, BrainCircuit, HeartPulse, Stethoscope } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, BrainCircuit, HeartPulse, Stethoscope, Music } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -227,6 +227,14 @@ export default function QuizPage() {
                             <Link href="/ai-nurse">
                                 <Stethoscope />
                                 AI Nurse
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href="/music">
+                                <Music />
+                                Music
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

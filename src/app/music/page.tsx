@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Music } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Music, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-import { Header } from '@/components/cyclewise/Header';
 import {
   SidebarProvider,
   Sidebar,
@@ -18,9 +18,11 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { SlidingPuzzle } from '@/components/cyclewise/SlidingPuzzle';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Header } from '@/components/cyclewise/Header';
 
-export default function SlidingPuzzlePage() {
+export default function MusicPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -61,7 +63,7 @@ export default function SlidingPuzzlePage() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild isActive>
+                        <SidebarMenuButton asChild>
                             <Link href="/games">
                                 <Gamepad2 />
                                 Games
@@ -84,8 +86,8 @@ export default function SlidingPuzzlePage() {
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild isActive>
                             <Link href="/music">
                                 <Music />
                                 Music
@@ -96,11 +98,43 @@ export default function SlidingPuzzlePage() {
             </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <div className="flex-grow flex flex-col h-screen">
             <Header />
-            <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8 flex items-center justify-center">
-                 <SlidingPuzzle />
-            </main>
+            <div className="flex h-full flex-col items-center justify-center p-4">
+            <Card className="w-full max-w-lg text-center glass">
+                <CardHeader>
+                    <CardTitle className="font-headline text-3xl flex items-center justify-center gap-3">
+                        <Music className="h-8 w-8"/>
+                        Relaxing Soundscape
+                    </CardTitle>
+                    <CardDescription className="text-lg">
+                        Unwind with a personalized soundscape designed to help you relax and de-stress.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={{
+                            scale: [1, 1.02, 1],
+                            transition: {
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }
+                        }}
+                    >
+                        <Button asChild size="lg" className="h-14 text-xl">
+                            <Link href="https://share.imagica.ai/?q=faa8f82f-aa7c-4a55-8f2e-c1aaffe04355" target="_blank" rel="noopener noreferrer">
+                                <Sparkles className="mr-3 h-6 w-6" />
+                                Launch Music Player
+                            </Link>
+                        </Button>
+                    </motion.div>
+                     <p className="text-xs text-muted-foreground mt-4">
+                        You will be redirected to an external website to enjoy the music.
+                    </p>
+                </CardContent>
+            </Card>
           </div>
         </SidebarInset>
       </div>

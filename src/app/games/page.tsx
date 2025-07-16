@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Droplets, Gamepad2, LayoutDashboard, Loader2, BrainCircuit, HeartPulse, Stethoscope, LayoutGrid, SpellCheck } from 'lucide-react';
+import { Droplets, Gamepad2, LayoutDashboard, Loader2, BrainCircuit, HeartPulse, Stethoscope, LayoutGrid, SpellCheck, Music } from 'lucide-react';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -82,6 +82,14 @@ export default function GamesPage() {
                           <Link href="/ai-nurse">
                               <Stethoscope />
                               AI Nurse
+                          </Link>
+                      </SidebarMenuButton>
+                  </SidebarMenuItem>
+                   <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                          <Link href="/music">
+                              <Music />
+                              Music
                           </Link>
                       </SidebarMenuButton>
                   </SidebarMenuItem>
