@@ -22,11 +22,11 @@ import { NovelReader } from '@/components/cyclewise/NovelReader';
 import { notFound } from 'next/navigation';
 
 
-export default function NovelPage({ params: { slug } }: { params: { slug: string } }) {
+export default function NovelPage({ params }: { params: { slug: string } }) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  const novel = NOVELS.find((n) => n.slug === slug);
+  const novel = NOVELS.find((n) => n.slug === params.slug);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -54,7 +54,7 @@ export default function NovelPage({ params: { slug } }: { params: { slug: string
             <SidebarHeader>
               <div className="flex items-center gap-2">
                 <Droplets className="h-7 w-7 text-primary" />
-                <h1 className="text-2xl font-headline font-bold text-primary-foreground">
+                <h1 className="text-2xl font-headline font-bold text-foreground">
                   CycleWise
                 </h1>
               </div>
