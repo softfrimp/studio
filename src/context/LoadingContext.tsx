@@ -17,12 +17,10 @@ const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 export const LoadingProvider = ({ children }: { children: ReactNode }) => {
   const [loadingStage, setLoadingStage] = useState<LoadingStage>('splash');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [onFinish, setOnFinish] = useState<(() => void) | null>(null);
 
   const showLoader = useCallback((callback: () => void) => {
     setLoadingStage('splash');
-    setOnFinish(() => callback);
-
+    
     setTimeout(() => {
       setLoadingStage('creators');
     }, 1500); // Splash screen duration
@@ -61,7 +59,14 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
             {loadingStage === 'creators' && <CreatorsScreen />}
           </motion.div>
         ) : (
-          children
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {children}
+          </motion.div>
         )}
       </AnimatePresence>
     </LoadingContext.Provider>
