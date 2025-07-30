@@ -35,6 +35,7 @@ import {
 
 import type { CyclePrediction } from '@/lib/types';
 import { calculateCyclePhases } from '@/lib/cycle-calculator';
+import { useLoading } from '@/context/LoadingContext';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -57,11 +58,12 @@ export default function CycleWisePage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { toast } = useToast();
-  const { user, loading, updateInitialPeriod } = useAuth();
+  const { user, loading: authLoading, updateInitialPeriod } = useAuth();
   const router = useRouter();
+  const { showLoader } = useLoading();
 
   useEffect(() => {
-    if (loading) return; // Wait until loading is false
+    if (authLoading) return; // Wait until loading is false
     if (!user) {
       router.push('/login');
     } else if (user && user.lastPeriodDate && !initialPeriodDate) {
@@ -72,7 +74,12 @@ export default function CycleWisePage() {
       handleInitialPeriodSubmit(date, cycleLength, true); // Pass true to avoid loading spinner on initial load
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, loading, router]);
+  }, [user, authLoading, router]);
+
+  const handleSidebarClick = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    showLoader(() => router.push(href));
+  }
 
 
   const handleInitialPeriodSubmit = async (date: Date, length: number, fromEffect = false) => {
@@ -101,7 +108,7 @@ export default function CycleWisePage() {
   
   const noPredictionsAvailable = !prediction;
 
-  if (loading || !user) {
+  if (authLoading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -125,7 +132,7 @@ export default function CycleWisePage() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive>
-                  <Link href="/">
+                  <Link href="/" onClick={(e) => handleSidebarClick(e, '/')}>
                     <LayoutDashboard />
                     Dashboard
                   </Link>
@@ -133,7 +140,7 @@ export default function CycleWisePage() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/games">
+                  <Link href="/games" onClick={(e) => handleSidebarClick(e, '/games')}>
                     <Gamepad2 />
                     Games
                   </Link>
@@ -141,7 +148,7 @@ export default function CycleWisePage() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                      <Link href="/exercises">
+                      <Link href="/exercises" onClick={(e) => handleSidebarClick(e, '/exercises')}>
                           <HeartPulse />
                           Exercises
                       </Link>
@@ -149,7 +156,7 @@ export default function CycleWisePage() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                      <Link href="/ai-nurse">
+                      <Link href="/ai-nurse" onClick={(e) => handleSidebarClick(e, '/ai-nurse')}>
                           <Stethoscope />
                           AI Nurse
                       </Link>
@@ -157,7 +164,7 @@ export default function CycleWisePage() {
               </SidebarMenuItem>
                <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                      <Link href="/music">
+                      <Link href="/music" onClick={(e) => handleSidebarClick(e, '/music')}>
                           <Music />
                           Music
                       </Link>
@@ -165,7 +172,7 @@ export default function CycleWisePage() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                    <Link href="/novels">
+                    <Link href="/novels" onClick={(e) => handleSidebarClick(e, '/novels')}>
                         <BookOpen />
                         Novels
                     </Link>

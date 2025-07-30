@@ -4,10 +4,10 @@
 import type { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/AuthContext';
+import { LoadingProvider } from '@/context/LoadingContext';
 import './globals.css';
-import { useState, useEffect } from 'react';
-import { SplashScreen } from '@/components/cyclewise/SplashScreen';
 import { Alegreya } from 'next/font/google';
+
 
 const alegreya = Alegreya({
   subsets: ['latin'],
@@ -27,15 +27,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2500); // Splash screen will be visible for 2.5 seconds
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <html lang="en" className={alegreya.variable}>
@@ -45,8 +36,10 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          {showSplash ? <SplashScreen /> : children}
-          <Toaster />
+            <LoadingProvider>
+                {children}
+                <Toaster />
+            </LoadingProvider>
         </AuthProvider>
       </body>
     </html>

@@ -19,12 +19,14 @@ import {
 import { Header } from '@/components/cyclewise/Header';
 import { NOVELS } from '@/lib/novels';
 import { NovelReader } from '@/components/cyclewise/NovelReader';
+import { useLoading } from '@/context/LoadingContext';
 
 
 export default function NovelPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const params = useParams();
+  const { showLoader } = useLoading();
   const slug = params.slug as string;
 
   const novel = NOVELS.find((n) => n.slug === slug);
@@ -37,6 +39,11 @@ export default function NovelPage() {
   
   if (!novel) {
     notFound();
+  }
+
+  const handleSidebarClick = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    showLoader(() => router.push(href));
   }
 
   if (loading || !user) {
@@ -63,7 +70,7 @@ export default function NovelPage() {
             <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="/">
+                            <Link href="/" onClick={(e) => handleSidebarClick(e, '/')}>
                                 <LayoutDashboard />
                                 Dashboard
                             </Link>
@@ -71,7 +78,7 @@ export default function NovelPage() {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="/games">
+                            <Link href="/games" onClick={(e) => handleSidebarClick(e, '/games')}>
                                 <Gamepad2 />
                                 Games
                             </Link>
@@ -79,7 +86,7 @@ export default function NovelPage() {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="/exercises">
+                            <Link href="/exercises" onClick={(e) => handleSidebarClick(e, '/exercises')}>
                                 <HeartPulse />
                                 Exercises
                             </Link>
@@ -87,7 +94,7 @@ export default function NovelPage() {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="/ai-nurse">
+                            <Link href="/ai-nurse" onClick={(e) => handleSidebarClick(e, '/ai-nurse')}>
                                 <Stethoscope />
                                 AI Nurse
                             </Link>
@@ -95,7 +102,7 @@ export default function NovelPage() {
                     </SidebarMenuItem>
                      <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="/music">
+                            <Link href="/music" onClick={(e) => handleSidebarClick(e, '/music')}>
                                 <Music />
                                 Music
                             </Link>
@@ -103,7 +110,7 @@ export default function NovelPage() {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild isActive>
-                            <Link href="/novels">
+                            <Link href="/novels" onClick={(e) => handleSidebarClick(e, '/novels')}>
                                 <BookOpen />
                                 Novels
                             </Link>
