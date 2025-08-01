@@ -21,7 +21,7 @@ export const NOVELS: Novel[] = [
         author: "AI",
         slug: "the-mirror-algorithm",
         coverImage: {
-            src: "https://placehold.co/400x600.png",
+            src: "https://images.unsplash.com/photo-1519577918463-484ce33e1ecb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtaXJyb3J8ZW58MHx8fHwxNzU0MDIwNDc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
             hint: "futuristic mirror city"
         },
         chapters: [
@@ -288,3 +288,5 @@ And it wasn’t just the seat.`
         ]
     }
 ];
+
+    
