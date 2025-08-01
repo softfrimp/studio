@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     allowedDevOrigins: [
-      'https://6000-firebase-studio-1748798530757.cluster-c3a7z3wnwzapkx3rfr5kz62dac.cloudworkstations.dev',
+      'https://6000-firebase-cyclewise20-1754028650193.cluster-c3a7z3wnwzapkx3rfr5kz62dac.cloudworkstations.dev',
     ],
   },
 };
