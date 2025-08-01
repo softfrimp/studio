@@ -118,22 +118,23 @@ export default function QuizPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {question.options.map((option, index) => (
-                  <Button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={selectedAnswer !== null}
-                    className={cn(
-                      'h-auto whitespace-normal justify-start p-4 text-left',
-                      selectedAnswer !== null &&
-                        (index === question.correctAnswerIndex
-                          ? 'bg-green-500/80 hover:bg-green-500/90'
-                          : selectedAnswer === index
-                          ? 'bg-red-500/80 hover:bg-red-500/90'
-                          : 'bg-muted hover:bg-muted')
-                    )}
-                  >
-                    {option}
-                  </Button>
+                  <motion.div whileTap={{ scale: 0.95 }} key={index}>
+                    <Button
+                      onClick={() => handleAnswerSelect(index)}
+                      disabled={selectedAnswer !== null}
+                      className={cn(
+                        'h-auto whitespace-normal justify-start p-4 text-left w-full',
+                        selectedAnswer !== null &&
+                          (index === question.correctAnswerIndex
+                            ? 'bg-green-500/80 hover:bg-green-500/90'
+                            : selectedAnswer === index
+                            ? 'bg-red-500/80 hover:bg-red-500/90'
+                            : 'bg-muted hover:bg-muted')
+                      )}
+                    >
+                      {option}
+                    </Button>
+                  </motion.div>
                 ))}
               </div>
               {selectedAnswer !== null && (
