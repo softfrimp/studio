@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { BookOpen, Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Music } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -21,6 +22,28 @@ import {
 import { BreathingExercise } from '@/components/cyclewise/BreathingExercise';
 import { CrampReliefExercises } from '@/components/cyclewise/CrampReliefExercises';
 import { useLoading } from '@/context/LoadingContext';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
+
 
 export default function ExercisesPage() {
   const { user, loading } = useAuth();
@@ -114,10 +137,19 @@ export default function ExercisesPage() {
       <SidebarInset>
       <Header />
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <BreathingExercise />
-            <CrampReliefExercises />
-        </div>
+        <motion.div 
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <motion.div variants={itemVariants}>
+                <BreathingExercise />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+                <CrampReliefExercises />
+            </motion.div>
+        </motion.div>
       </main>
       </SidebarInset>
       </div>

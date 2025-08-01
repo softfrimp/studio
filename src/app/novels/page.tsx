@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { BookOpen, Droplets, Gamepad2, LayoutDashboard, Loader2, HeartPulse, Stethoscope, Music } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 import { Header } from '@/components/cyclewise/Header';
 import {
@@ -21,6 +22,16 @@ import {
 import { NOVELS } from '@/lib/novels';
 import { NovelCoverCard } from '@/components/cyclewise/NovelCoverCard';
 import { useLoading } from '@/context/LoadingContext';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 export default function NovelsHubPage() {
   const { user, loading } = useAuth();
@@ -114,13 +125,20 @@ export default function NovelsHubPage() {
         <SidebarInset>
           <Header />
           <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-            <h1 className="text-4xl font-headline font-bold mb-2">Novels</h1>
-            <p className="text-muted-foreground mb-8">A collection of stories to get lost in.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <h1 className="text-4xl font-headline font-bold mb-2">Novels</h1>
+              <p className="text-muted-foreground mb-8">A collection of stories to get lost in.</p>
+            </motion.div>
+            <motion.div 
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+            >
               {NOVELS.map((novel) => (
                 <NovelCoverCard key={novel.slug} novel={novel} />
               ))}
-            </div>
+            </motion.div>
           </main>
         </SidebarInset>
       </div>

@@ -8,13 +8,21 @@ import { type Novel } from '@/lib/novels';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/button';
 
-type NovelCoverCardProps = {
-  novel: Novel;
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
 };
 
-export function NovelCoverCard({ novel }: NovelCoverCardProps) {
+export function NovelCoverCard({ novel }: { novel: Novel }) {
   return (
     <motion.div
+      variants={itemVariants}
       whileHover={{ y: -5, scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 300 }}
     >
