@@ -18,7 +18,7 @@ export type Novel = {
 export const NOVELS: Novel[] = [
     {
         title: "The Mirror Algorithm",
-        author: "AI",
+        author: "CycleWise Team",
         slug: "the-mirror-algorithm",
         coverImage: {
             src: "https://images.unsplash.com/photo-1519577918463-484ce33e1ecb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtaXJyb3J8ZW58MHx8fHwxNzU0MDIwNDc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -224,7 +224,7 @@ She smiled bitterly.
     },
     {
         title: "A Little Closer Every Day",
-        author: "AI",
+        author: "CycleWise Team",
         slug: "a-little-closer-every-day",
         coverImage: {
             src: "https://images.unsplash.com/reserve/Af0sF2OS5S5gatqrKzVP_Silhoutte.jpg?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsb3ZlfGVufDB8fHx8MTc1NDA1MzM1NXww&ixlib=rb-4.1.0&q=80&w=1080",
