@@ -227,7 +227,7 @@ She smiled bitterly.
         author: "AI",
         slug: "a-little-closer-every-day",
         coverImage: {
-            src: "https://placehold.co/400x600.png",
+            src: "https://images.unsplash.com/reserve/Af0sF2OS5S5gatqrKzVP_Silhoutte.jpg?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsb3ZlfGVufDB8fHx8MTc1NDA1MzM1NXww&ixlib=rb-4.1.0&q=80&w=1080",
             hint: "couple sketchbook rain"
         },
         chapters: [
@@ -289,4 +289,5 @@ And it wasn’t just the seat.`
     }
 ];
 
+    
     
