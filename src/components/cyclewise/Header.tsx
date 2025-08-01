@@ -21,8 +21,8 @@ export function Header() {
       <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <SidebarTrigger />
-          <Droplets className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
-          <h1 className="text-2xl sm:text-3xl font-headline font-bold text-foreground">
+          <Droplets className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+          <h1 className="text-xl sm:text-2xl font-headline font-bold text-foreground">
             CycleWise
           </h1>
         </div>

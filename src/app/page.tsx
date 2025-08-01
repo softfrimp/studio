@@ -248,7 +248,7 @@ export default function CycleWisePage() {
                           </Card>
                       ) : (
                       <Tabs defaultValue="calendar" className="w-full">
-                          <TabsList className="grid w-full grid-cols-3 bg-primary/20">
+                          <TabsList className="grid w-full grid-cols-1 xs:grid-cols-3 bg-primary/20">
                             <TabsTrigger value="calendar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendar</TabsTrigger>
                             <TabsTrigger value="piechart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Pie Chart</TabsTrigger>
                             <TabsTrigger value="barchart" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Bar Chart</TabsTrigger>
