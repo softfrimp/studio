@@ -4,9 +4,8 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SplashScreen } from '@/components/cyclewise/SplashScreen';
-import { CreatorsScreen } from '@/components/cyclewise/CreatorsScreen';
 
-type LoadingStage = 'splash' | 'creators' | 'done';
+type LoadingStage = 'splash' | 'done';
 
 interface LoadingContextType {
   showLoader: (callback: () => void) => void;
@@ -22,25 +21,17 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
     setLoadingStage('splash');
     
     setTimeout(() => {
-      setLoadingStage('creators');
-    }, 1500); // Splash screen duration
-
-    setTimeout(() => {
       setLoadingStage('done');
       callback(); // Execute the navigation callback
-    }, 3000); // Total duration (splash + creators)
+    }, 1500); // Splash screen duration
   }, []);
 
   // Handle initial load animation
   if (isInitialLoad) {
-     setTimeout(() => {
-      setLoadingStage('creators');
-    }, 1500);
-
     setTimeout(() => {
       setLoadingStage('done');
       setIsInitialLoad(false);
-    }, 3000);
+    }, 1500);
   }
 
   const value = { showLoader };
@@ -50,13 +41,12 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
       <AnimatePresence mode="wait">
         {loadingStage !== 'done' ? (
           <motion.div
-            key={loadingStage}
+            key="splash"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {loadingStage === 'splash' && <SplashScreen />}
-            {loadingStage === 'creators' && <CreatorsScreen />}
+            <SplashScreen />
           </motion.div>
         ) : (
           <motion.div
